@@ -1,0 +1,144 @@
+{
+  "schools": [
+    {
+      "id": "SC001",
+      "name": "Monrovia Central Primary School",
+      "type": "Primary",
+      "province": "Montserrado",
+      "lastUpdated": "2024-09-15",
+      "washData": {
+        "studentsWithWaterAccess": 245,
+        "totalStudents": 300,
+        "functionalToilets": 8,
+        "totalToilets": 10,
+        "handwashingStations": 12,
+        "waterStorageCapacity": 5000,
+        "storageUnit": "Liters"
+      },
+      "facilities": [
+        "BH-2024-001",
+        "HP-2024-015",
+        "WT-2024-008",
+        "RH-2024-003"
+      ],
+      "coordinates": {
+        "latitude": 6.2907,
+        "longitude": -10.7603
+      },
+      "contact": {
+        "principal": "Mrs. Sarah Johnson",
+        "phone": "+231-777-1234",
+        "email": "monrovia.central@edu.lr"
+      }
+    },
+    {
+      "id": "SC002",
+      "name": "Buchanan Secondary School",
+      "type": "Secondary",
+      "province": "Grand Bassa",
+      "lastUpdated": "2024-09-12",
+      "washData": {
+        "studentsWithWaterAccess": 380,
+        "totalStudents": 450,
+        "functionalToilets": 12,
+        "totalToilets": 15,
+        "handwashingStations": 18,
+        "waterStorageCapacity": 8000,
+        "storageUnit": "Liters"
+      },
+      "facilities": ["BH-2024-045", "HP-2024-089", "SP-2024-012"],
+      "coordinates": {
+        "latitude": 5.8762,
+        "longitude": -9.9259
+      },
+      "contact": {
+        "principal": "Mr. James Williams",
+        "phone": "+231-888-5678",
+        "email": "buchanan.secondary@edu.lr"
+      }
+    },
+    {
+      "id": "SC003",
+      "name": "Gbarnga Elementary School",
+      "type": "Primary",
+      "province": "Bong",
+      "lastUpdated": "2024-09-18",
+      "washData": {
+        "studentsWithWaterAccess": 180,
+        "totalStudents": 220,
+        "functionalToilets": 4,
+        "totalToilets": 6,
+        "handwashingStations": 8,
+        "waterStorageCapacity": 3000,
+        "storageUnit": "Liters"
+      },
+      "facilities": ["HP-2024-156", "WL-2024-078"],
+      "coordinates": {
+        "latitude": 6.9972,
+        "longitude": -9.4693
+      },
+      "contact": {
+        "principal": "Mrs. Elizabeth Davis",
+        "phone": "+231-776-9012",
+        "email": "gbarnga.elementary@edu.lr"
+      }
+    },
+    {
+      "id": "SC004",
+      "name": "Harper Technical High School",
+      "type": "Secondary",
+      "province": "Maryland",
+      "lastUpdated": "2024-09-10",
+      "washData": {
+        "studentsWithWaterAccess": 320,
+        "totalStudents": 380,
+        "functionalToilets": 14,
+        "totalToilets": 16,
+        "handwashingStations": 20,
+        "waterStorageCapacity": 6000,
+        "storageUnit": "Liters"
+      },
+      "facilities": ["BH-2024-023", "HP-2024-087", "WT-2024-045"],
+      "coordinates": {
+        "latitude": 4.3754,
+        "longitude": -7.7182
+      },
+      "contact": {
+        "principal": "Mr. Robert Brown",
+        "phone": "+231-886-3456",
+        "email": "harper.technical@edu.lr"
+      }
+    },
+    {
+      "id": "SC005",
+      "name": "Greenville Junior School",
+      "type": "Primary",
+      "province": "Sinoe",
+      "lastUpdated": "2024-09-08",
+      "washData": {
+        "studentsWithWaterAccess": 125,
+        "totalStudents": 180,
+        "functionalToilets": 6,
+        "totalToilets": 8,
+        "handwashingStations": 10,
+        "waterStorageCapacity": 2500,
+        "storageUnit": "Liters"
+      },
+      "facilities": ["HP-2024-023", "RH-2024-015"],
+      "coordinates": {
+        "latitude": 5.0123,
+        "longitude": -8.4211
+      },
+      "contact": {
+        "principal": "Mrs. Martha Taylor",
+        "phone": "+231-777-7890",
+        "email": "greenville.junior@edu.lr"
+      }
+    }
+  ],
+  "metadata": {
+    "totalSchools": 5,
+    "lastSync": "2024-09-18T10:30:00Z",
+    "dataSource": "Liberia Ministry of Education"
+  }
+}

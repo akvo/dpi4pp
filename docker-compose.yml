@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx_server
+    ports:
+      - "3000:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./app_01:/usr/share/nginx/html/app_01:ro
+      - ./app_02:/usr/share/nginx/html/app_02:ro
+      - ./app_03:/usr/share/nginx/html/app_03:ro
+      - ./api:/usr/share/nginx/html/api:ro
+    restart: unless-stopped

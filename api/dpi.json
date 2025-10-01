@@ -1,0 +1,291 @@
+[
+  {
+    "id": "BH-2024-001",
+    "name": "Borehole",
+    "type": "Borehole",
+    "location": "Monrovia Central Primary School",
+    "schoolId": "SC001",
+    "functionality": "Functioning",
+    "jmpStatus": "Limited Service",
+    "lastService": "2024-08-20",
+    "nextService": "2024-11-20",
+    "depth": "45m",
+    "pumpType": "Electric Submersible",
+    "flowRate": "2000 L/hour",
+    "waterQuality": {
+      "pH": 6.8,
+      "turbidity": "2 NTU",
+      "lastTest": "2024-08-15",
+      "safe": true
+    },
+    "coordinates": {
+      "latitude": 6.2907,
+      "longitude": -10.7603
+    },
+    "contractor": "AquaDrill Liberia Ltd."
+  },
+  {
+    "id": "HP-2024-015",
+    "name": "Hand Pump",
+    "type": "Hand Pump",
+    "location": "Monrovia Central Primary School",
+    "schoolId": "SC001",
+    "functionality": "Functioning",
+    "jmpStatus": "Basic Service",
+    "lastService": "2024-09-01",
+    "nextService": "2024-12-01",
+    "pumpModel": "India Mark II",
+    "installationYear": 2021,
+    "sparePartsAvailable": true,
+    "coordinates": {
+      "latitude": 6.2908,
+      "longitude": -10.7602
+    },
+    "technician": "Water Mission Liberia"
+  },
+  {
+    "id": "WT-2024-008",
+    "name": "Water Tank",
+    "type": "Storage Tank",
+    "location": "Monrovia Central Primary School",
+    "schoolId": "SC001",
+    "functionality": "Not Functioning",
+    "jmpStatus": "No Service",
+    "lastService": "2024-07-15",
+    "nextService": "2024-10-15",
+    "capacity": "5000 Liters",
+    "material": "Plastic",
+    "installationYear": 2020,
+    "issue": "Leak at base connection",
+    "coordinates": {
+      "latitude": 6.2906,
+      "longitude": -10.7604
+    },
+    "supplier": "Liberia Water Solutions"
+  },
+  {
+    "id": "RH-2024-003",
+    "name": "Rainwater Harvesting",
+    "type": "Rainwater System",
+    "location": "Monrovia Central Primary School",
+    "schoolId": "SC001",
+    "functionality": "Functioning",
+    "jmpStatus": "Basic Service",
+    "lastService": "2024-09-10",
+    "nextService": "2025-03-10",
+    "roofArea": "150 sqm",
+    "tankCapacity": "3000 Liters",
+    "firstFlush": true,
+    "filtration": true,
+    "coordinates": {
+      "latitude": 6.2905,
+      "longitude": -10.7605
+    },
+    "installer": "EcoWater Liberia"
+  },
+  {
+    "id": "BH-2024-045",
+    "name": "Borehole",
+    "type": "Borehole",
+    "location": "Buchanan Secondary School",
+    "schoolId": "SC002",
+    "functionality": "Functioning",
+    "jmpStatus": "Basic Service",
+    "lastService": "2024-08-25",
+    "nextService": "2024-11-25",
+    "depth": "38m",
+    "pumpType": "Electric Submersible",
+    "flowRate": "1800 L/hour",
+    "waterQuality": {
+      "pH": 7.1,
+      "turbidity": "1 NTU",
+      "lastTest": "2024-08-20",
+      "safe": true
+    },
+    "coordinates": {
+      "latitude": 5.8762,
+      "longitude": -9.9259
+    },
+    "contractor": "DrillWell Liberia Inc."
+  },
+  {
+    "id": "HP-2024-089",
+    "name": "Hand Pump",
+    "type": "Hand Pump",
+    "location": "Buchanan Secondary School",
+    "schoolId": "SC002",
+    "functionality": "Functioning",
+    "jmpStatus": "Basic Service",
+    "lastService": "2024-09-05",
+    "nextService": "2024-12-05",
+    "pumpModel": "India Mark III",
+    "installationYear": 2022,
+    "sparePartsAvailable": true,
+    "coordinates": {
+      "latitude": 5.8763,
+      "longitude": -9.9258
+    },
+    "technician": "WaterAid Liberia"
+  },
+  {
+    "id": "SP-2024-012",
+    "name": "Solar Pump",
+    "type": "Solar Pump",
+    "location": "Buchanan Secondary School",
+    "schoolId": "SC002",
+    "functionality": "Functioning",
+    "jmpStatus": "Limited Service",
+    "lastService": "2024-09-08",
+    "nextService": "2025-03-08",
+    "panelCapacity": "2.5 kW",
+    "batteryBackup": true,
+    "flowRate": "2200 L/hour",
+    "installationYear": 2023,
+    "coordinates": {
+      "latitude": 5.8761,
+      "longitude": -9.9260
+    },
+    "supplier": "Solar Solutions Liberia"
+  },
+  {
+    "id": "HP-2024-156",
+    "name": "Hand Pump",
+    "type": "Hand Pump",
+    "location": "Gbarnga Elementary School",
+    "schoolId": "SC003",
+    "functionality": "Functioning",
+    "jmpStatus": "Basic Service",
+    "lastService": "2024-09-02",
+    "nextService": "2024-12-02",
+    "pumpModel": "India Mark II",
+    "installationYear": 2021,
+    "sparePartsAvailable": false,
+    "coordinates": {
+      "latitude": 6.9972,
+      "longitude": -9.4693
+    },
+    "technician": "Liberia Water and Sewer Corporation"
+  },
+  {
+    "id": "WL-2024-078",
+    "name": "Well",
+    "type": "Dug Well",
+    "location": "Gbarnga Elementary School",
+    "schoolId": "SC003",
+    "functionality": "Not Functioning",
+    "jmpStatus": "No Service",
+    "lastService": "2024-06-30",
+    "nextService": "2024-09-30",
+    "depth": "12m",
+    "lining": "Concrete",
+    "cover": "Broken",
+    "issue": "Contamination suspected",
+    "coordinates": {
+      "latitude": 6.9973,
+      "longitude": -9.4692
+    },
+    "lastInspector": "Ministry of Health"
+  },
+  {
+    "id": "BH-2024-023",
+    "name": "Borehole",
+    "type": "Borehole",
+    "location": "Harper Technical High School",
+    "schoolId": "SC004",
+    "functionality": "Functioning",
+    "jmpStatus": "Basic Service",
+    "lastService": "2024-08-18",
+    "nextService": "2024-11-18",
+    "depth": "52m",
+    "pumpType": "Electric Submersible",
+    "flowRate": "2500 L/hour",
+    "waterQuality": {
+      "pH": 6.9,
+      "turbidity": "1 NTU",
+      "lastTest": "2024-08-10",
+      "safe": true
+    },
+    "coordinates": {
+      "latitude": 4.3754,
+      "longitude": -7.7182
+    },
+    "contractor": "Deep Water Drilling Co."
+  },
+  {
+    "id": "HP-2024-087",
+    "name": "Hand Pump",
+    "type": "Hand Pump",
+    "location": "Harper Technical High School",
+    "schoolId": "SC004",
+    "functionality": "Functioning",
+    "jmpStatus": "Basic Service",
+    "lastService": "2024-09-07",
+    "nextService": "2024-12-07",
+    "pumpModel": "India Mark III",
+    "installationYear": 2022,
+    "sparePartsAvailable": true,
+    "coordinates": {
+      "latitude": 4.3755,
+      "longitude": -7.7181
+    },
+    "technician": "Water Mission Liberia"
+  },
+  {
+    "id": "WT-2024-045",
+    "name": "Water Tank",
+    "type": "Storage Tank",
+    "location": "Harper Technical High School",
+    "schoolId": "SC004",
+    "functionality": "Functioning",
+    "jmpStatus": "Basic Service",
+    "lastService": "2024-08-25",
+    "nextService": "2025-02-25",
+    "capacity": "6000 Liters",
+    "material": "Steel",
+    "installationYear": 2021,
+    "coordinates": {
+      "latitude": 4.3753,
+      "longitude": -7.7183
+    },
+    "supplier": "Steel Tanks Liberia"
+  },
+  {
+    "id": "HP-2024-023",
+    "name": "Hand Pump",
+    "type": "Hand Pump",
+    "location": "Greenville Junior School",
+    "schoolId": "SC005",
+    "functionality": "Functioning",
+    "jmpStatus": "Basic Service",
+    "lastService": "2024-09-05",
+    "nextService": "2024-12-05",
+    "pumpModel": "India Mark II",
+    "installationYear": 2020,
+    "sparePartsAvailable": false,
+    "coordinates": {
+      "latitude": 5.0123,
+      "longitude": -8.4211
+    },
+    "technician": "Liberia Water and Sewer Corporation"
+  },
+  {
+    "id": "RH-2024-015",
+    "name": "Rainwater Harvesting",
+    "type": "Rainwater System",
+    "location": "Greenville Junior School",
+    "schoolId": "SC005",
+    "functionality": "Functioning",
+    "jmpStatus": "Basic Service",
+    "lastService": "2024-09-12",
+    "nextService": "2025-03-12",
+    "roofArea": "120 sqm",
+    "tankCapacity": "2000 Liters",
+    "firstFlush": true,
+    "filtration": true,
+    "coordinates": {
+      "latitude": 5.0122,
+      "longitude": -8.4212
+    },
+    "installer": "Community Water Project"
+  }
+]
