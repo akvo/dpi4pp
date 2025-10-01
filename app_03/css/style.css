@@ -95,6 +95,10 @@ body {
   margin-bottom: 2rem;
 }
 
+.hidden {
+  display: none;
+}
+
 .scanner-wrapper {
   position: relative;
   width: 100%;
@@ -134,9 +138,15 @@ body {
 }
 
 @keyframes scan {
-  0% { top: 0; }
-  50% { top: 100%; }
-  100% { top: 0; }
+  0% {
+    top: 0;
+  }
+  50% {
+    top: 100%;
+  }
+  100% {
+    top: 0;
+  }
 }
 
 .scanner-controls {
@@ -146,7 +156,8 @@ body {
   flex-wrap: wrap;
 }
 
-.scan-btn, .manual-btn {
+.scan-btn,
+.manual-btn {
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 0.5rem;
@@ -273,14 +284,16 @@ body {
 }
 
 /* Result Section */
-.result-section, .error-section {
+.result-section,
+.error-section {
   background: white;
   border-radius: 1rem;
   padding: 2rem;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
-.result-section.hidden, .error-section.hidden {
+.result-section.hidden,
+.error-section.hidden {
   display: none;
 }
 
@@ -444,7 +457,8 @@ body {
     flex-direction: column;
   }
 
-  .scan-btn, .manual-btn {
+  .scan-btn,
+  .manual-btn {
     width: 100%;
     justify-content: center;
   }

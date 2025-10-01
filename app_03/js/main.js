@@ -112,6 +112,12 @@ $(document).ready(function() {
     function showFacilityDetails(facility) {
         console.log("Showing facility details:", facility);
 
+        // Stop any ongoing scanning
+        stopScanning();
+
+        // Close any open modal
+        $("#manual-modal").addClass("hidden");
+
         const detailsHtml = `
             <div class="detail-card">
                 <h4><i class="fas fa-info-circle"></i> Basic Information</h4>
@@ -398,6 +404,12 @@ $(document).ready(function() {
 
     // Show error message
     function showErrorMessage(message) {
+        // Stop any ongoing scanning
+        stopScanning();
+
+        // Close any open modal
+        $("#manual-modal").addClass("hidden");
+
         $("#error-message").text(message);
         $("#error-section").removeClass("hidden");
         $("#result-section").addClass("hidden");
@@ -409,7 +421,19 @@ $(document).ready(function() {
         $("#result-section").addClass("hidden");
         $("#error-section").addClass("hidden");
         $(".scanner-section").removeClass("hidden");
+
+        // Close any open modal
+        $("#manual-modal").addClass("hidden");
+
+        // Clear any input fields
+        $("#dpi-id-input").val('');
+
+        // Stop any ongoing scanning
         stopScanning();
+
+        // Update scanner status
+        updateScanStatus(false);
+        updateScannerButtons(false);
     }
 
     // Event Listeners
