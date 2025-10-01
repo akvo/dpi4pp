@@ -9,7 +9,8 @@
       "Bash(pip install:*)",
       "Bash(python:*)",
       "Bash(npm install:*)",
-      "Bash(npm run generate-qr:*)"
+      "Bash(npm run generate-qr:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

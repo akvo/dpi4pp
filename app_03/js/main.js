@@ -7,7 +7,7 @@ $(document).ready(function() {
     async function loadDpiData() {
         try {
             console.log("Loading DPI data...");
-            const response = await axios.get("/api/dpi.json");
+            const response = await axios.get("../api/dpi.json");
             dpiData = response.data;
             console.log("DPI data loaded successfully:", dpiData.length, "facilities");
         } catch (error) {

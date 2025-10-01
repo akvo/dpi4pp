@@ -8,12 +8,12 @@ $(document).ready(function () {
             console.log("Attempting to load data with Axios...");
 
             // Try to load schools data
-            const schoolsResponse = await axios.get("/api/schools.json");
+            const schoolsResponse = await axios.get("../api/schools.json");
             schoolsData = schoolsResponse.data.schools;
             console.log("Schools data loaded successfully:", schoolsData);
 
             // Try to load DPI data
-            const facilitiesResponse = await axios.get("/api/dpi.json");
+            const facilitiesResponse = await axios.get("../api/dpi.json");
             facilitiesData = facilitiesResponse.data;
             console.log("DPI data loaded successfully:", facilitiesData);
 
