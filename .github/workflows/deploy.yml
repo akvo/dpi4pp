@@ -1,0 +1,272 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Build static site
+        run: |
+          # Create a build directory for GitHub Pages
+          mkdir -p build
+
+          # Copy all applications to build directory
+          cp -r app_01 build/
+          cp -r app_02 build/
+          cp -r app_03 build/
+          cp -r api build/
+
+          # Create root index.html for navigation
+          cat > build/index.html << 'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DPI4PP - WASH Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            background: white;
+            border-radius: 2rem;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .app-card {
+            background: #f9fafb;
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.1);
+        }
+
+        .app-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .app-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .app-description {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .app-link {
+            color: #667eea;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .app-link:hover {
+            color: #764ba2;
+        }
+
+        .footer {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 2px solid #f3f4f6;
+            color: #6b7280;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #764ba2;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .apps-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .app-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-tint"></i>
+            </div>
+            <h1>DPI4PP</h1>
+            <p class="subtitle">WASH Management Information System for Liberia</p>
+        </header>
+
+        <main class="apps-grid">
+            <a href="app_01/" class="app-card">
+                <div class="app-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h2 class="app-title">School Dashboard</h2>
+                <p class="app-description">
+                    Comprehensive dashboard for monitoring WASH facilities in schools. View real-time data, analytics, and facility status.
+                </p>
+                <span class="app-link">
+                    Launch Dashboard <i class="fas fa-arrow-right"></i>
+                </span>
+            </a>
+
+            <a href="app_03/" class="app-card">
+                <div class="app-icon">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <h2 class="app-title">DPI Scanner</h2>
+                <p class="app-description">
+                    Mobile barcode scanner for quick facility data lookup. Scan QR codes to instantly access facility information.
+                </p>
+                <span class="app-link">
+                    Launch Scanner <i class="fas fa-arrow-right"></i>
+                </span>
+            </a>
+
+            <a href="api/barcode/" class="app-card">
+                <div class="app-icon">
+                    <i class="fas fa-print"></i>
+                </div>
+                <h2 class="app-title">QR Code Library</h2>
+                <p class="app-description">
+                    Complete library of QR codes for all WASH facilities. Search, view, and print facility QR codes.
+                </p>
+                <span class="app-link">
+                    View QR Codes <i class="fas fa-arrow-right"></i>
+                </span>
+            </a>
+        </main>
+
+        <footer class="footer">
+            <p>
+                Powered by <a href="https://akvo.org" target="_blank">Akvo</a> |
+                <a href="https://github.com/akvo/dpi4pp" target="_blank">GitHub Repository</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
+EOF
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './build'
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

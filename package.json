@@ -1,0 +1,16 @@
+{
+  "name": "dpi4pp",
+  "version": "1.0.0",
+  "description": "WASH Management Information System for Liberia",
+  "scripts": {
+    "generate-qr": "node scripts/generate-qr-codes.js",
+    "build": "npm run generate-qr && mkdir -p build && cp -r app_01 app_02 app_03 api build/",
+    "serve": "cd build && python3 -m http.server 8000"
+  },
+  "devDependencies": {
+    "qrcode": "^1.5.3"
+  },
+  "keywords": ["wash", "liberia", "dpi", "monitoring", "water", "sanitation"],
+  "author": "Akvo Foundation",
+  "license": "MIT"
+}

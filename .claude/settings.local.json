@@ -7,7 +7,9 @@
       "Bash(docker logs:*)",
       "Bash(chmod:*)",
       "Bash(pip install:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run generate-qr:*)"
     ],
     "deny": [],
     "ask": []
