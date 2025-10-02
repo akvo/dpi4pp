@@ -3,6 +3,10 @@ $(document).ready(function () {
     let schoolsData = [];
     let facilitiesData = [];
     let loadedSchools = new Set(); // Track schools that have loaded their facilities
+    let enrollmentChart = null; // Store chart instance
+    let schoolMap = null; // Store map instance
+    let schoolMarkers = []; // Store school markers
+    let currentFilter = 'all'; // Current map filter
 
     async function loadSchoolsData() {
         try {
@@ -16,6 +20,13 @@ $(document).ready(function () {
             // Render table with loaded data
             renderSchoolsTable();
             updateWASHSummary();
+
+            // Initialize map if on maps page
+            if ($('#maps-page').hasClass('active')) {
+                setTimeout(() => {
+                    initializeSchoolMap();
+                }, 100);
+            }
         } catch (error) {
             console.log(
                 "Failed to load JSON files (this is normal for local development):",
@@ -449,6 +460,17 @@ $(document).ready(function () {
         // Show selected page
         const pageName = $(this).data("page");
         $(`#${pageName}-page`).addClass("active");
+
+        // Initialize components based on page
+        if (pageName === 'dashboard') {
+            setTimeout(() => {
+                initializeEnrollmentChart();
+            }, 100);
+        } else if (pageName === 'maps') {
+            setTimeout(() => {
+                initializeSchoolMap();
+            }, 100);
+        }
     });
 
     // Search functionality
@@ -598,8 +620,267 @@ $(document).ready(function () {
             }
         });
 
+    // Dashboard Chart Initialization
+    function initializeEnrollmentChart() {
+        const ctx = document.getElementById('enrollmentChart');
+        if (!ctx) return;
+
+        // Sample enrollment data
+        const enrollmentData = {
+            labels: ['10am', '11am', '12am', '01am', '02am', '03am', '04am', '05am', '06am', '07am'],
+            datasets: [{
+                label: 'Student Enrollment',
+                data: [60, 52, 62, 58, 45, 40, 58, 68, 52, 65],
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#3b82f6',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: enrollmentData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff',
+                        borderColor: '#3b82f6',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return `Students: ${context.parsed.y}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        border: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#64748b',
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: '#f1f5f9',
+                            borderDash: [5, 5]
+                        },
+                        border: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#64748b',
+                            font: {
+                                size: 12
+                            },
+                            callback: function(value) {
+                                return value;
+                            }
+                        },
+                        min: 0,
+                        max: 100
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                elements: {
+                    point: {
+                        hoverBackgroundColor: '#1d4ed8'
+                    }
+                }
+            }
+        };
+
+        // Destroy existing chart if it exists
+        if (enrollmentChart) {
+            enrollmentChart.destroy();
+        }
+
+        enrollmentChart = new Chart(ctx, config);
+    }
+
+    // Initialize dashboard when dashboard page is active
+    function initializeDashboard() {
+        if ($('#dashboard-page').hasClass('active')) {
+            // Initialize chart after a short delay to ensure DOM is ready
+            setTimeout(() => {
+                initializeEnrollmentChart();
+            }, 100);
+        }
+    }
+
+    // Maps functionality
+    function initializeSchoolMap() {
+        if (!document.getElementById('school-map')) return;
+
+        // Initialize map centered on Liberia
+        schoolMap = L.map('school-map').setView([6.4281, -9.4295], 7);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18
+        }).addTo(schoolMap);
+
+        // Load and display school markers
+        if (schoolsData.length > 0) {
+            displaySchoolMarkers();
+        }
+    }
+
+    function displaySchoolMarkers() {
+        // Clear existing markers
+        schoolMarkers.forEach(marker => schoolMap.removeLayer(marker));
+        schoolMarkers = [];
+
+        // Filter schools based on current filter
+        let filteredSchools = schoolsData;
+        if (currentFilter !== 'all') {
+            if (currentFilter === 'Primary' || currentFilter === 'Secondary') {
+                filteredSchools = schoolsData.filter(school => school.type === currentFilter);
+            }
+        }
+
+        // Add markers for each school
+        filteredSchools.forEach(school => {
+            const marker = createSchoolMarker(school);
+            if (marker) {
+                marker.addTo(schoolMap);
+                schoolMarkers.push(marker);
+            }
+        });
+
+        // Update visible schools count
+        $('#visible-schools').text(filteredSchools.length);
+    }
+
+    function createSchoolMarker(school) {
+        if (!school.coordinates) return null;
+
+        // Determine marker color based on school type and WASH status
+        let markerColor = '#3b82f6'; // Default blue
+        if (school.type === 'Primary') {
+            markerColor = '#10b981'; // Green
+        } else if (school.type === 'Secondary') {
+            markerColor = '#f59e0b'; // Orange
+        }
+
+        // Check WASH status
+        const washFunctional = school.washData ?
+            (school.washData.studentsWithWaterAccess / school.washData.totalStudents) > 0.7 : true;
+
+        if (!washFunctional) {
+            markerColor = '#ef4444'; // Red for needs repair
+        }
+
+        // Create custom icon
+        const icon = L.divIcon({
+            className: 'custom-school-marker',
+            html: `<div style="
+                width: 20px;
+                height: 20px;
+                background: ${markerColor};
+                border: 3px solid white;
+                border-radius: 50%;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 10px;
+                font-weight: bold;
+            ">
+                <i class="fas fa-school" style="font-size: 8px;"></i>
+            </div>`,
+            iconSize: [20, 20],
+            iconAnchor: [10, 10],
+            popupAnchor: [0, -10]
+        });
+
+        // Create marker
+        const marker = L.marker([school.coordinates.latitude, school.coordinates.longitude], { icon });
+
+        // Create popup content
+        const washPercentage = school.washData ?
+            Math.round((school.washData.studentsWithWaterAccess / school.washData.totalStudents) * 100) : 0;
+
+        const facilitiesCount = school.facilities ? school.facilities.length : 0;
+
+        const popupContent = `
+            <div style="font-family: 'Inter', sans-serif; min-width: 200px;">
+                <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 14px; font-weight: 600;">
+                    ${school.name}
+                </h4>
+                <div style="margin-bottom: 8px;">
+                    <span style="display: inline-block; padding: 2px 8px; background: ${school.type === 'Primary' ? '#dcfce7' : '#fef3c7'}; color: ${school.type === 'Primary' ? '#166534' : '#92400e'}; border-radius: 12px; font-size: 11px; font-weight: 600;">
+                        ${school.type}
+                    </span>
+                </div>
+                <p style="margin: 4px 0; font-size: 13px; color: #64748b;">
+                    <i class="fas fa-map-marker-alt"></i> ${school.province}
+                </p>
+                <p style="margin: 4px 0; font-size: 13px; color: #64748b;">
+                    <i class="fas fa-users"></i> ${school.washData ? school.washData.totalStudents : 'N/A'} Students
+                </p>
+                <p style="margin: 4px 0; font-size: 13px; color: #64748b;">
+                    <i class="fas fa-tint"></i> ${washPercentage}% Water Access
+                </p>
+                <p style="margin: 4px 0; font-size: 13px; color: #64748b;">
+                    <i class="fas fa-wrench"></i> ${facilitiesCount} WASH Facilities
+                </p>
+                <p style="margin: 8px 0 0 0; font-size: 11px; color: #94a3b8;">
+                    Last updated: ${school.lastUpdated}
+                </p>
+            </div>
+        `;
+
+        marker.bindPopup(popupContent);
+        return marker;
+    }
+
+    // Map filter functionality
+    $(document).on('click', '.map-btn', function() {
+        $('.map-btn').removeClass('active');
+        $(this).addClass('active');
+
+        currentFilter = $(this).data('filter');
+
+        if (schoolMap && schoolsData.length > 0) {
+            displaySchoolMarkers();
+        }
+    });
+
     // Load data on page initialization
     console.log("=== App 01 Dashboard Initializing ===");
+
+    // Initialize dashboard
+    initializeDashboard();
 
     // Load only schools data initially - facilities data will be loaded on demand
     loadSchoolsData()

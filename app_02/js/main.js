@@ -68,7 +68,7 @@ $(document).ready(function () {
     async function loadMapData() {
         try {
             console.log("Loading Liberia map data...");
-            const response = await fetch("source/liberia.json");
+            const response = await fetch("../api/source/liberia.json");
 
             if (!response.ok) {
                 throw new Error(

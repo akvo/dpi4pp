@@ -18,177 +18,286 @@
     />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   </head>
   <body>
     <div class="dashboard">
       <!-- Sidebar -->
       <aside class="sidebar">
-        <div class="logo">
-          <i class="fas fa-graduation-cap"></i>
+        <div class="logo-section">
+          <div class="logo-icon">
+            <img src="images/ministry-of-education-logo.png" alt="Ministry of Education" class="ministry-logo" />
+          </div>
+          <div class="logo-text">
+            <span class="logo-title">Ministry of</span>
+            <span class="logo-subtitle">Education</span>
+          </div>
         </div>
         <nav class="nav-menu">
           <ul>
             <li>
-              <a href="#" class="nav-item active" data-page="dashboard" data-tooltip="Dashboard"
-                ><i class="fas fa-chart-line"></i
-              ></a>
+              <a href="#" class="nav-item active" data-page="dashboard">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+              </a>
             </li>
             <li>
-              <a href="#" class="nav-item" data-page="maps" data-tooltip="School Locations"
-                ><i class="fas fa-map-marked-alt"></i
-              ></a>
+              <a href="#" class="nav-item" data-page="maps">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>School Locations</span>
+              </a>
             </li>
             <li>
-              <a href="#" class="nav-item" data-page="database" data-tooltip="School Records"
-                ><i class="fas fa-database"></i
-              ></a>
+              <a href="#" class="nav-item" data-page="database">
+                <i class="fas fa-folder"></i>
+                <span>School Records</span>
+              </a>
             </li>
           </ul>
         </nav>
+        <div class="sidebar-footer">
+          <a href="#" class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </a>
+        </div>
       </aside>
 
       <!-- Main Content -->
       <main class="main-content">
         <!-- Header -->
         <header class="header">
-          <div class="search-bar">
+          <button class="menu-toggle">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
             <input
               type="text"
-              placeholder="Search students, schools, teachers, reports..."
+              class="search-input"
+              placeholder="Search"
             />
-            <button class="search-btn"><i class="fas fa-search"></i></button>
           </div>
           <div class="header-actions">
             <button class="notification-btn">
               <i class="fas fa-bell"></i>
+              <span class="notification-badge">4</span>
             </button>
-            <button class="user-btn">
-              <i class="fas fa-user-circle"></i> Education Officer
-            </button>
+            <div class="language-selector">
+              <img src="https://flagcdn.com/24x18/gb.png" alt="EN" width="24" height="18" />
+              <span>EN</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="user-profile">
+              <div class="user-avatar">
+                <img src="images/user-avatar.jpg" alt="Moni Roy" />
+              </div>
+              <div class="user-info">
+                <span class="user-name">Moni Roy</span>
+                <span class="user-role">Educational officer</span>
+              </div>
+            </div>
           </div>
         </header>
 
         <!-- Page Content -->
         <div class="content">
-          <!-- Dashboard Page -->
-          <div id="dashboard-page" class="page active">
-            <h1>Liberia School Management Information System</h1>
+          <!-- Maps Page -->
+          <div id="maps-page" class="page">
+            <h1 class="page-title">Liberia School Geographic Distribution</h1>
 
-            <!-- Stats Cards -->
-            <div class="stats-grid">
-              <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-school"></i></div>
-                <div class="stat-info">
-                  <h3>2,456</h3>
-                  <p>Enrolled Students</p>
-                  <span class="stat-change positive"
-                    ><i class="fas fa-arrow-up"></i> 12.3%</span
-                  >
-                </div>
+            <div class="maps-container">
+              <div class="map-controls">
+                <button class="map-btn active" data-filter="all">
+                  <i class="fas fa-map"></i> All Schools
+                </button>
+                <button class="map-btn" data-filter="Primary">
+                  <i class="fas fa-graduation-cap"></i> Primary Schools
+                </button>
+                <button class="map-btn" data-filter="Secondary">
+                  <i class="fas fa-book"></i> Secondary Schools
+                </button>
+                <button class="map-btn" data-filter="wash">
+                  <i class="fas fa-tint"></i> WASH Status
+                </button>
+                <button class="map-btn" data-filter="province">
+                  <i class="fas fa-map-marker-alt"></i> By Province
+                </button>
               </div>
-              <div class="stat-card">
-                <div class="stat-icon">
-                  <i class="fas fa-chalkboard-teacher"></i>
-                </div>
-                <div class="stat-info">
-                  <h3>156</h3>
-                  <p>Active Teachers</p>
-                  <span class="stat-change positive"
-                    ><i class="fas fa-arrow-up"></i> 5.7%</span
-                  >
-                </div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-building"></i></div>
-                <div class="stat-info">
-                  <h3>24</h3>
-                  <p>Operational Schools</p>
-                  <span class="stat-change positive"
-                    ><i class="fas fa-arrow-up"></i> 4.2%</span
-                  >
-                </div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-icon">
-                  <i class="fas fa-user-graduate"></i>
-                </div>
-                <div class="stat-info">
-                  <h3>89%</h3>
-                  <p>Attendance Rate</p>
-                  <span class="stat-change positive"
-                    ><i class="fas fa-arrow-up"></i> 2.1%</span
-                  >
-                </div>
-              </div>
-            </div>
 
-            <!-- Charts Section -->
-            <div class="charts-grid">
-              <div class="chart-card">
-                <h3>Student Enrollment Analytics</h3>
-                <div class="chart-placeholder">
-                  <p>
-                    <i class="fas fa-chart-area"></i> Enrollment Trends by Grade
-                    Level
-                  </p>
-                </div>
-              </div>
-              <div class="chart-card">
-                <h3>Recent School Activities</h3>
-                <div class="orders-list">
-                  <div class="order-item">
-                    <span class="order-id">#REG-001</span>
-                    <span class="order-customer">New Student Registration</span>
-                    <span class="order-amount">Monrovia Central</span>
+              <div class="map-content">
+                <div class="map-card">
+                  <div class="map-header">
+                    <h3><i class="fas fa-map-marked-alt"></i> Interactive School Mapping</h3>
+                    <div class="map-stats">
+                      <span class="map-stat">
+                        <i class="fas fa-school"></i>
+                        <span id="visible-schools">5</span> Schools
+                      </span>
+                    </div>
                   </div>
-                  <div class="order-item">
-                    <span class="order-id">#TCH-042</span>
-                    <span class="order-customer">Teacher Assignment</span>
-                    <span class="order-amount">Buchanan High</span>
+                  <div class="map-container">
+                    <div id="school-map" style="height: 600px; width: 100%;"></div>
                   </div>
-                  <div class="order-item">
-                    <span class="order-id">#EXM-078</span>
-                    <span class="order-customer">Exam Results Posted</span>
-                    <span class="order-amount">Grade 6</span>
+                  <div class="map-legend">
+                    <div class="legend-item">
+                      <div class="legend-marker primary"></div>
+                      <span>Primary Schools</span>
+                    </div>
+                    <div class="legend-item">
+                      <div class="legend-marker secondary"></div>
+                      <span>Secondary Schools</span>
+                    </div>
+                    <div class="legend-item">
+                      <div class="legend-marker functioning"></div>
+                      <span>Functioning WASH</span>
+                    </div>
+                    <div class="legend-item">
+                      <div class="legend-marker needs-repair"></div>
+                      <span>Needs Repair</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Maps Page -->
-          <div id="maps-page" class="page">
-            <h1>Liberia School Geographic Distribution</h1>
+          <!-- Dashboard Page -->
+          <div id="dashboard-page" class="page active">
+            <h1 class="page-title">Liberia School Management Information System</h1>
 
-            <div class="maps-container">
-              <div class="map-controls">
-                <button class="map-btn">
-                  <i class="fas fa-map"></i> All Schools
-                </button>
-                <button class="map-btn">
-                  <i class="fas fa-graduation-cap"></i> Primary Schools
-                </button>
-                <button class="map-btn">
-                  <i class="fas fa-book"></i> Secondary Schools
-                </button>
-                <button class="map-btn">
-                  <i class="fas fa-university"></i> Universities
-                </button>
-                <button class="map-btn">
-                  <i class="fas fa-bus"></i> School Routes
-                </button>
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-content">
+                  <div class="stat-label">Enrolled Students</div>
+                  <div class="stat-value">2,456</div>
+                  <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i> 8.5%
+                  </div>
+                </div>
+                <div class="stat-icon students">
+                  <i class="fas fa-user-graduate"></i>
+                </div>
               </div>
 
-              <div class="chart-card">
-                <h3>School Geographic Information System</h3>
-                <div class="chart-placeholder" style="height: 500px">
-                  <p>
-                    <i class="fas fa-map-marked-alt"></i> Interactive School
-                    Mapping
-                  </p>
-                  <p style="font-size: 14px; margin-top: 10px">
-                    Real-time school locations and coverage areas across Liberia
-                  </p>
+              <div class="stat-card">
+                <div class="stat-content">
+                  <div class="stat-label">Active Teachers</div>
+                  <div class="stat-value">156</div>
+                  <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i> 1.3%
+                  </div>
+                </div>
+                <div class="stat-icon teachers">
+                  <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-content">
+                  <div class="stat-label">Operational Schools</div>
+                  <div class="stat-value">24</div>
+                  <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i> 4.2%
+                  </div>
+                </div>
+                <div class="stat-icon schools">
+                  <i class="fas fa-school"></i>
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-content">
+                  <div class="stat-label">Attendance Rate</div>
+                  <div class="stat-value">89%</div>
+                  <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i> 1.8%
+                  </div>
+                </div>
+                <div class="stat-icon attendance">
+                  <i class="fas fa-calendar-check"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Charts and Activities -->
+            <div class="dashboard-grid">
+              <div class="chart-section">
+                <div class="chart-card">
+                  <div class="chart-header">
+                    <h3><i class="fas fa-chart-line"></i> Student Enrollment Analytics</h3>
+                    <button class="chart-options">
+                      <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                  </div>
+                  <div class="chart-container">
+                    <canvas id="enrollmentChart"></canvas>
+                  </div>
+                </div>
+              </div>
+
+              <div class="activities-section">
+                <div class="activities-card">
+                  <div class="activities-header">
+                    <h3><i class="fas fa-clock"></i> Recent School Activities</h3>
+                  </div>
+                  <div class="activities-list">
+                    <div class="activity-item">
+                      <div class="activity-id">#REG-001</div>
+                      <div class="activity-details">
+                        <div class="activity-school">Monrovia Central</div>
+                      </div>
+                      <div class="activity-type exam-results">Exam Results</div>
+                    </div>
+                    <div class="activity-item">
+                      <div class="activity-id">#REG-002</div>
+                      <div class="activity-details">
+                        <div class="activity-school">Monrovia Central</div>
+                      </div>
+                      <div class="activity-type student-registration">Student Registration</div>
+                    </div>
+                    <div class="activity-item">
+                      <div class="activity-id">#REG-003</div>
+                      <div class="activity-details">
+                        <div class="activity-school">Buchanan High</div>
+                      </div>
+                      <div class="activity-type teacher-assignment">Teacher Assignment</div>
+                    </div>
+                    <div class="activity-item">
+                      <div class="activity-id">#REG-002</div>
+                      <div class="activity-details">
+                        <div class="activity-school">Monrovia Central</div>
+                      </div>
+                      <div class="activity-type exam-results">Exam Results</div>
+                    </div>
+                    <div class="activity-item">
+                      <div class="activity-id">#REG-003</div>
+                      <div class="activity-details">
+                        <div class="activity-school">Buchanan High</div>
+                      </div>
+                      <div class="activity-type teacher-assignment">Teacher Assignment</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="banner-card">
+                  <div class="banner-content">
+                    <h3>An informational banner stay here</h3>
+                    <button class="banner-btn">Learn more</button>
+                  </div>
+                  <div class="banner-illustration">
+                    <div class="illustration-elements">
+                      <i class="fas fa-laptop"></i>
+                      <i class="fas fa-chart-bar"></i>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -196,39 +305,48 @@
 
           <!-- Database Page -->
           <div id="database-page" class="page">
-            <h1>Liberia Schools WASH Database</h1>
+            <h1 class="page-title">Liberia School Management Information System</h1>
 
             <div class="database-container">
-              <div class="db-controls">
-                <button class="db-btn">
-                  <i class="fas fa-school"></i> All Schools
+              <div class="filters-bar">
+                <button class="filter-btn">
+                  <i class="fas fa-filter"></i> Filter By
                 </button>
-                <button class="db-btn">
-                  <i class="fas fa-graduation-cap"></i> Primary Schools
-                </button>
-                <button class="db-btn">
-                  <i class="fas fa-book"></i> Secondary Schools
-                </button>
-                <button class="db-btn">
-                  <i class="fas fa-chart-line"></i> WASH Status
-                </button>
-                <button class="db-btn">
-                  <i class="fas fa-map"></i> By Province
+                <div class="filter-dropdown">
+                  <select class="filter-select">
+                    <option>Schools</option>
+                    <option>Primary</option>
+                    <option>Secondary</option>
+                  </select>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="filter-dropdown">
+                  <input type="text" placeholder="Order Type" class="filter-input" />
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="filter-dropdown">
+                  <input type="text" placeholder="Order Status" class="filter-input" />
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <button class="reset-filter-btn">
+                  <i class="fas fa-undo"></i> Reset Filter
                 </button>
               </div>
 
-              <div class="charts-grid">
-                <div class="chart-card">
-                  <h3>School Directory with WASH Information</h3>
-                  <div class="db-table">
-                    <table id="schools-table">
+              <div class="content-grid">
+                <div class="main-card">
+                  <div class="card-header">
+                    <h3><i class="fas fa-folder-open"></i> School Directory</h3>
+                  </div>
+                  <div class="table-container">
+                    <table id="schools-table" class="data-table">
                       <thead>
                         <tr>
-                          <th></th>
-                          <th>School Name</th>
-                          <th>School Type</th>
+                          <th width="40"></th>
+                          <th>School name</th>
+                          <th>School type</th>
                           <th>Province</th>
-                          <th>Last Updated</th>
+                          <th>Last updated</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -238,28 +356,47 @@
                   </div>
                 </div>
 
-                <div class="chart-card">
-                  <h3>WASH Infrastructure Summary</h3>
-                  <div class="quick-stats">
-                    <div class="quick-stat">
-                      <span class="stat-label">Total Schools:</span>
-                      <span class="stat-value">156</span>
+                <div class="sidebar-content">
+                  <div class="summary-card">
+                    <h3>Infrastructure Summary</h3>
+                    <div class="summary-stats">
+                      <div class="summary-item">
+                        <i class="fas fa-school"></i>
+                        <span class="summary-label">Total Schools:</span>
+                        <span class="summary-value">5</span>
+                      </div>
+                      <div class="summary-item">
+                        <i class="fas fa-tint"></i>
+                        <span class="summary-label">School water access</span>
+                        <span class="summary-value">5(100%)</span>
+                      </div>
+                      <div class="summary-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span class="summary-label">Functional Wash Assets:</span>
+                        <span class="summary-value">12</span>
+                      </div>
+                      <div class="summary-item">
+                        <i class="fas fa-tools"></i>
+                        <span class="summary-label">Assets Needing Repair</span>
+                        <span class="summary-value">2</span>
+                      </div>
+                      <div class="summary-item">
+                        <i class="fas fa-sync"></i>
+                        <span class="summary-label">Last registry sync:</span>
+                        <span class="summary-value">2</span>
+                      </div>
                     </div>
-                    <div class="quick-stat">
-                      <span class="stat-label">Schools with Water Access:</span>
-                      <span class="stat-value">134 (86%)</span>
+                  </div>
+
+                  <div class="download-card">
+                    <div class="download-content">
+                      <h3>Download mobile app to scan WASH facilities</h3>
+                      <button class="learn-more-btn">Learn more</button>
                     </div>
-                    <div class="quick-stat">
-                      <span class="stat-label">Functional WASH Assets:</span>
-                      <span class="stat-value">412</span>
-                    </div>
-                    <div class="quick-stat">
-                      <span class="stat-label">Assets Needing Repair:</span>
-                      <span class="stat-value">28</span>
-                    </div>
-                    <div class="quick-stat">
-                      <span class="stat-label">Last Registry Sync:</span>
-                      <span class="stat-value">2024-09-18</span>
+                    <div class="download-illustration">
+                      <div class="phone-mockup">
+                        <i class="fas fa-mobile-alt"></i>
+                      </div>
                     </div>
                   </div>
                 </div>
