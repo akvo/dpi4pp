@@ -46,6 +46,18 @@ body {
   box-shadow: 0 2px 8px var(--shadow-light);
 }
 
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
 .header-title h1 {
   font-size: 24px;
   font-weight: 600;
