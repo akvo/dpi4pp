@@ -16,10 +16,10 @@
         "storageUnit": "Liters"
       },
       "facilities": [
-        "BH-2024-001",
-        "HP-2024-015",
-        "WT-2024-008",
-        "RH-2024-003"
+        {"id": "BH-2024-001", "name": "Borehole"},
+        {"id": "HP-2024-015", "name": "Hand Pump"},
+        {"id": "WT-2024-008", "name": "Water Tank"},
+        {"id": "RH-2024-003", "name": "Rainwater Harvesting"}
       ],
       "coordinates": {
         "latitude": 6.2907,
@@ -46,7 +46,11 @@
         "waterStorageCapacity": 8000,
         "storageUnit": "Liters"
       },
-      "facilities": ["BH-2024-045", "HP-2024-089", "SP-2024-012"],
+      "facilities": [
+        {"id": "BH-2024-045", "name": "Borehole"},
+        {"id": "HP-2024-089", "name": "Hand Pump"},
+        {"id": "SP-2024-012", "name": "Solar Pump"}
+      ],
       "coordinates": {
         "latitude": 5.8762,
         "longitude": -9.9259
@@ -72,7 +76,10 @@
         "waterStorageCapacity": 3000,
         "storageUnit": "Liters"
       },
-      "facilities": ["HP-2024-156", "WL-2024-078"],
+      "facilities": [
+        {"id": "HP-2024-156", "name": "Hand Pump"},
+        {"id": "WL-2024-078", "name": "Well"}
+      ],
       "coordinates": {
         "latitude": 6.9972,
         "longitude": -9.4693
@@ -98,7 +105,11 @@
         "waterStorageCapacity": 6000,
         "storageUnit": "Liters"
       },
-      "facilities": ["BH-2024-023", "HP-2024-087", "WT-2024-045"],
+      "facilities": [
+        {"id": "BH-2024-023", "name": "Borehole"},
+        {"id": "HP-2024-087", "name": "Hand Pump"},
+        {"id": "WT-2024-045", "name": "Water Tank"}
+      ],
       "coordinates": {
         "latitude": 4.3754,
         "longitude": -7.7182
@@ -124,7 +135,10 @@
         "waterStorageCapacity": 2500,
         "storageUnit": "Liters"
       },
-      "facilities": ["HP-2024-023", "RH-2024-015"],
+      "facilities": [
+        {"id": "HP-2024-023", "name": "Hand Pump"},
+        {"id": "RH-2024-015", "name": "Rainwater Harvesting"}
+      ],
       "coordinates": {
         "latitude": 5.0123,
         "longitude": -8.4211

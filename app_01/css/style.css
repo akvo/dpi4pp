@@ -663,6 +663,92 @@ h1 {
     color: #5b21b6;
 }
 
+/* Facility Rows and Buttons */
+.facility-row {
+    background-color: #f9fafb;
+}
+
+.facility-expand-btn {
+    background-color: #3498db;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+}
+
+.facility-expand-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.facility-expand-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+}
+
+.facility-expand-btn i {
+    font-size: 12px;
+}
+
+.facility-id-badge {
+    background-color: #e5e7eb;
+    color: #4b5563;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: monospace;
+    display: inline-block;
+    margin-left: 8px;
+}
+
+.facility-details {
+    background-color: #f3f4f6;
+}
+
+.facility-data-table {
+    padding: 10px 20px;
+}
+
+.facility-data-table table {
+    width: 100%;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.facility-data-table th,
+.facility-data-table td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.facility-data-table th {
+    background-color: #f9fafb;
+    font-weight: 600;
+    font-size: 13px;
+    color: #374151;
+}
+
+.facility-data-table td {
+    font-size: 13px;
+    color: #4b5563;
+}
+
+.facility-loading {
+    color: #6b7280;
+    font-size: 14px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .sidebar {

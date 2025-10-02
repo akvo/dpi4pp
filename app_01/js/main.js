@@ -69,6 +69,42 @@ $(document).ready(function () {
                 </tr>
             `);
 
+            // Create facility rows for WASH Data section
+            let facilityRows = '';
+            if (school.facilities && school.facilities.length > 0) {
+                school.facilities.forEach((facility, fIndex) => {
+                    facilityRows += `
+                        <tr class="facility-row" data-facility-index="${fIndex}" data-school-index="${index}">
+                            <td>${facility.name} <span class="facility-id-badge">${facility.id}</span></td>
+                            <td>
+                                <button class="facility-expand-btn" data-facility-id="${facility.id}" data-school-index="${index}" data-facility-index="${fIndex}">
+                                    <i class="fas fa-download"></i> Get Additional Data from WASH Registry
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="facility-details" id="facility-${index}-${fIndex}-details" style="display: none;">
+                            <td colspan="2">
+                                <div class="facility-loading" id="facility-loading-${index}-${fIndex}" style="text-align: center; padding: 10px;">
+                                    <i class="fas fa-spinner fa-spin"></i> Loading facility data...
+                                </div>
+                                <div class="facility-data-table" id="facility-data-${index}-${fIndex}" style="display: none;">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Indicator</th>
+                                                <th>Value</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="facility-tbody-${index}-${fIndex}">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
             // Create details row
             const detailsRow = $(`
                 <tr class="school-details" id="school-${index + 1}-details" style="display: none;">
@@ -101,38 +137,9 @@ $(document).ready(function () {
                                                 <td>Water Storage Capacity</td>
                                                 <td>${school.washData.waterStorageCapacity} ${school.washData.storageUnit}</td>
                                             </tr>
+                                            ${facilityRows}
                                         </tbody>
                                     </table>
-                                </div>
-                            </div>
-                            <div class="detail-section">
-                                <h4><i class="fas fa-database"></i> External Data</h4>
-                                <div id="button-section-${index}" class="button-section">
-                                    <button class="get-data-btn" data-school-id="${index}">
-                                        <i class="fas fa-download"></i> GET Data from WASH Registry
-                                    </button>
-                                </div>
-                                <div id="loading-${index}" class="loading-section" style="display: none; text-align: center; padding: 20px;">
-                                    <div class="loading-spinner">
-                                        <i class="fas fa-spinner fa-spin"></i>
-                                        <p>Fetching data from WASH Registry...</p>
-                                    </div>
-                                </div>
-                                <div id="table-section-${index}" class="external-data-table" style="display: none;">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>WASH Asset</th>
-                                                <th>UID</th>
-                                                <th>Functionality</th>
-                                                <th>JMP Status</th>
-                                                <th>Last Service</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="facilities-${index}">
-                                        </tbody>
-                                    </table>
-                                    <p class="registry-source" id="source-info-${index}"><small><i class="fas fa-info-circle"></i> Source: Liberia WASH Registry - Last synchronized: 2024-09-18</small></p>
                                 </div>
                             </div>
                         </div>
@@ -142,88 +149,146 @@ $(document).ready(function () {
 
             tbody.append(schoolRow);
             tbody.append(detailsRow);
-
-            // Load facilities for this school
-            loadSchoolFacilities(school, index);
         });
     }
 
-    function loadSchoolFacilities(school, schoolIndex) {
-        console.log(
-            `Preparing facilities section for school: ${school.name}, index: ${schoolIndex}`,
-        );
+    async function loadFacilityDetails(facilityId, schoolIndex, facilityIndex) {
+        console.log(`Loading facility details for: ${facilityId}`);
 
-        // Initially hide the table section - data will be loaded when button is clicked
-        $(`#table-section-${schoolIndex}`).hide();
-
-        if (!school.facilities || school.facilities.length === 0) {
-            // Hide the GET Data button if no facilities are available
-            $(`#button-section-${schoolIndex}`).hide();
-        }
-    }
-
-    async function fetchSchoolFacilitiesData(school, schoolIndex) {
-        console.log(`Fetching facilities data for school: ${school.name}`);
-
-        const buttonSection = $(`#button-section-${schoolIndex}`);
-        const loadingSection = $(`#loading-${schoolIndex}`);
-        const tableSection = $(`#table-section-${schoolIndex}`);
-        const facilitiesTable = $(`#facilities-${schoolIndex}`);
+        const loadingDiv = $(`#facility-loading-${schoolIndex}-${facilityIndex}`);
+        const dataDiv = $(`#facility-data-${schoolIndex}-${facilityIndex}`);
+        const tbody = $(`#facility-tbody-${schoolIndex}-${facilityIndex}`);
 
         // Show loading state
-        buttonSection.hide();
-        loadingSection.show();
+        loadingDiv.show();
+        dataDiv.hide();
 
-        // Simulate 2-second delay for external data fetching
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Simulate delay for fetching
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         // Load facilities data if not already loaded
         if (facilitiesData.length === 0) {
             await loadFacilitiesData();
         }
 
-        // Hide loading state
-        loadingSection.hide();
+        // Find the facility data
+        const facility = facilitiesData.find(f => f.id === facilityId);
 
-        // Populate facilities table
-        facilitiesTable.empty();
+        if (facility) {
+            tbody.empty();
 
-        if (!school.facilities || school.facilities.length === 0) {
-            facilitiesTable.append(
-                '<tr><td colspan="5" style="text-align: center; padding: 10px;">No facilities recorded for this school</td></tr>',
-            );
-        } else {
-            school.facilities.forEach((facilityId) => {
-                const facility = facilitiesData.find((f) => f.id === facilityId);
-                if (facility) {
-                    console.log(
-                        `Found facility: ${facility.name} (${facility.id})`,
+            // Add facility details as rows
+            const details = [
+                { indicator: 'Type', value: facility.type || 'N/A' },
+                { indicator: 'Location', value: facility.location || 'N/A' },
+                { indicator: 'Functionality', value: `<span class="status-badge ${facility.functionality === 'Functioning' ? 'active' : 'pending'}">${facility.functionality}</span>` },
+                { indicator: 'JMP Status', value: facility.jmpStatus || 'N/A' },
+                { indicator: 'Last Service', value: facility.lastService || 'N/A' },
+                { indicator: 'Next Service', value: facility.nextService || 'N/A' }
+            ];
+
+            // Add specific details based on facility type
+            if (facility.type === 'Borehole') {
+                details.push(
+                    { indicator: 'Depth', value: facility.depth || 'N/A' },
+                    { indicator: 'Pump Type', value: facility.pumpType || 'N/A' },
+                    { indicator: 'Flow Rate', value: facility.flowRate || 'N/A' }
+                );
+                if (facility.waterQuality) {
+                    details.push(
+                        { indicator: 'Water pH', value: facility.waterQuality.pH || 'N/A' },
+                        { indicator: 'Turbidity', value: facility.waterQuality.turbidity || 'N/A' },
+                        { indicator: 'Water Safe', value: facility.waterQuality.safe ? 'Yes' : 'No' }
                     );
-                    const facilityRow = $(`
-                        <tr>
-                            <td>${facility.name}</td>
-                            <td>${facility.id}</td>
-                            <td><span class="status-badge ${facility.functionality === "Functioning" ? "active" : "pending"}">${facility.functionality}</span></td>
-                            <td>${facility.jmpStatus}</td>
-                            <td>${facility.lastService}</td>
-                        </tr>
-                    `);
-                    facilitiesTable.append(facilityRow);
-                } else {
-                    console.log(`Facility not found for ID: ${facilityId}`);
                 }
+            } else if (facility.type === 'Hand Pump') {
+                details.push(
+                    { indicator: 'Pump Model', value: facility.pumpModel || 'N/A' },
+                    { indicator: 'Installation Year', value: facility.installationYear || 'N/A' },
+                    { indicator: 'Spare Parts Available', value: facility.sparePartsAvailable ? 'Yes' : 'No' }
+                );
+            } else if (facility.type === 'Storage Tank') {
+                details.push(
+                    { indicator: 'Capacity', value: facility.capacity || 'N/A' },
+                    { indicator: 'Material', value: facility.material || 'N/A' },
+                    { indicator: 'Installation Year', value: facility.installationYear || 'N/A' }
+                );
+            } else if (facility.type === 'Solar Pump') {
+                details.push(
+                    { indicator: 'Panel Capacity', value: facility.panelCapacity || 'N/A' },
+                    { indicator: 'Battery Backup', value: facility.batteryBackup ? 'Yes' : 'No' },
+                    { indicator: 'Flow Rate', value: facility.flowRate || 'N/A' }
+                );
+            } else if (facility.type === 'Rainwater System') {
+                details.push(
+                    { indicator: 'Roof Area', value: facility.roofArea || 'N/A' },
+                    { indicator: 'Tank Capacity', value: facility.tankCapacity || 'N/A' },
+                    { indicator: 'First Flush', value: facility.firstFlush ? 'Yes' : 'No' },
+                    { indicator: 'Filtration', value: facility.filtration ? 'Yes' : 'No' }
+                );
+            } else if (facility.type === 'Dug Well') {
+                details.push(
+                    { indicator: 'Depth', value: facility.depth || 'N/A' },
+                    { indicator: 'Lining', value: facility.lining || 'N/A' },
+                    { indicator: 'Cover', value: facility.cover || 'N/A' }
+                );
+            }
+
+            // Add contractor/technician info if available
+            if (facility.contractor) {
+                details.push({ indicator: 'Contractor', value: facility.contractor });
+            }
+            if (facility.technician) {
+                details.push({ indicator: 'Technician', value: facility.technician });
+            }
+            if (facility.submittedBy) {
+                details.push({ indicator: 'Data Source', value: facility.submittedBy });
+            }
+
+            // Render the details
+            details.forEach(detail => {
+                tbody.append(`
+                    <tr>
+                        <td>${detail.indicator}</td>
+                        <td>${detail.value}</td>
+                    </tr>
+                `);
             });
+        } else {
+            tbody.html('<tr><td colspan="2" style="text-align: center;">Facility data not found</td></tr>');
         }
 
-        // Show table section and mark as loaded
-        tableSection.show();
-        loadedSchools.add(schoolIndex);
-
-        // Update summary after loading data
-        updateWASHSummary();
-
-        console.log(`Facilities data loaded for school: ${school.name}`);
+        // Hide loading and show data
+        loadingDiv.hide();
+        dataDiv.show();
     }
+
+    // Handler for facility expand button
+    $(document).on('click', '.facility-expand-btn', async function(e) {
+        e.stopPropagation();
+
+        const $btn = $(this);
+        const facilityId = $btn.data('facility-id');
+        const schoolIndex = $btn.data('school-index');
+        const facilityIndex = $btn.data('facility-index');
+        const $detailsRow = $(`#facility-${schoolIndex}-${facilityIndex}-details`);
+
+        if ($detailsRow.is(':visible')) {
+            // Collapse
+            $detailsRow.slideUp(200);
+            $btn.html('<i class="fas fa-download"></i> Get Additional Data from WASH Registry');
+        } else {
+            // Expand and load data
+            $detailsRow.slideDown(200);
+            $btn.html('<i class="fas fa-chevron-up"></i> Hide Additional Data');
+
+            // Load facility details if not already loaded
+            if (!$detailsRow.data('loaded')) {
+                await loadFacilityDetails(facilityId, schoolIndex, facilityIndex);
+                $detailsRow.data('loaded', true);
+            }
+        }
+    });
 
     function updateWASHSummary() {
         const totalSchools = schoolsData.length;
@@ -420,16 +485,6 @@ $(document).ready(function () {
         toggleSchoolDetails($(this).closest(".school-row"));
     });
 
-    // GET Data button click handler
-    $(document).on("click", ".get-data-btn", function (e) {
-        e.stopPropagation();
-        const schoolIndex = $(this).data("school-id");
-        const school = schoolsData[schoolIndex];
-
-        if (school && !loadedSchools.has(schoolIndex)) {
-            fetchSchoolFacilitiesData(school, schoolIndex);
-        }
-    });
 
     // Database table row interactions (for non-expandable rows)
     $(".db-table tbody tr")
