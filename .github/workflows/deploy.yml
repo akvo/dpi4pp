@@ -44,6 +44,13 @@ jobs:
           # Copy root index.html for navigation
           cp docs/index.html build/
 
+          # Update base href tags for GitHub Pages deployment
+          sed -i 's|<base href="/app_01/" />|<base href="/dpi4pp/app_01/" />|g' build/app_01/index.html
+          sed -i 's|<base href="/app_02/" />|<base href="/dpi4pp/app_02/" />|g' build/app_02/index.html
+          sed -i 's|<base href="/app_03/" />|<base href="/dpi4pp/app_03/" />|g' build/app_03/index.html
+
+          echo "Updated base href tags for GitHub Pages deployment"
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

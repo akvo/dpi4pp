@@ -92,7 +92,8 @@ A comprehensive WASH (Water, Sanitation, and Hygiene) management system for Libe
    ```
 
 3. **Access applications**:
-   - Dashboard: http://localhost:3000/app_01/
+   - School Dashboard: http://localhost:3000/app_01/
+   - WASH Registry Dashboard: http://localhost:3000/app_02/
    - Scanner: http://localhost:3000/app_03/
    - QR Codes: http://localhost:3000/api/barcode/
 
