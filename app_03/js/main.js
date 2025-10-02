@@ -30,7 +30,69 @@ $(document).ready(function() {
 
         // Load DPI data and initialize scanner
         loadDpiData();
-        initScanner();
+        checkCameraAvailability().then((available) => {
+            if (available) {
+                initScanner();
+            } else {
+                console.log("No cameras detected, disabling camera features");
+                disableCameraFeatures();
+            }
+        });
+    }
+
+    // Check if cameras are available
+    async function checkCameraAvailability() {
+        try {
+            console.log("=== CAMERA AVAILABILITY CHECK ===");
+
+            if (!navigator.mediaDevices) {
+                console.error("navigator.mediaDevices not available");
+                return false;
+            }
+
+            if (!navigator.mediaDevices.enumerateDevices) {
+                console.error("navigator.mediaDevices.enumerateDevices not available");
+                return false;
+            }
+
+            if (!navigator.mediaDevices.getUserMedia) {
+                console.error("navigator.mediaDevices.getUserMedia not available");
+                return false;
+            }
+
+            console.log("Media devices API available, checking devices...");
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            console.log("All devices:", devices);
+
+            const cameras = devices.filter(device => device.kind === 'videoinput');
+            console.log(`Found ${cameras.length} camera(s):`, cameras);
+
+            // Test camera access
+            if (cameras.length > 0) {
+                try {
+                    console.log("Testing camera access...");
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    console.log("Camera access successful, stopping test stream");
+                    stream.getTracks().forEach(track => track.stop());
+                    return true;
+                } catch (testError) {
+                    console.error("Camera access test failed:", testError);
+                    return false;
+                }
+            }
+
+            return cameras.length > 0;
+        } catch (error) {
+            console.error("Error checking camera availability:", error);
+            return false;
+        }
+    }
+
+    // Disable camera features if no cameras available
+    function disableCameraFeatures() {
+        $("#start-scan").prop("disabled", true).text("No Camera Available");
+        $("#stop-scan").prop("disabled", true);
+        updateScanStatus(false);
     }
 
     // Load DPI data
@@ -64,11 +126,36 @@ $(document).ready(function() {
                 showErrorMessage("QR scanner library failed to load. Please refresh the page.");
                 return;
             }
+
+            // Check for camera support
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                console.error("Camera not supported in this browser");
+                showErrorMessage("Camera not supported in this browser. Please use manual input.");
+                return;
+            }
+
             html5QrCode = new Html5Qrcode("qr-reader");
             console.log("Scanner initialized successfully");
+
+            // Check camera permissions
+            checkCameraPermissions();
         } catch (error) {
             console.error("Failed to initialize scanner:", error);
             showErrorMessage("Failed to initialize camera scanner. Please use manual input instead.");
+        }
+    }
+
+    // Check camera permissions
+    function checkCameraPermissions() {
+        if ('permissions' in navigator) {
+            navigator.permissions.query({ name: 'camera' }).then((result) => {
+                console.log('Camera permission status:', result.state);
+                if (result.state === 'denied') {
+                    showErrorMessage("Camera permission denied. Please enable camera access in browser settings or use manual input.");
+                }
+            }).catch((err) => {
+                console.log('Permission query not supported:', err);
+            });
         }
     }
 
@@ -81,24 +168,83 @@ $(document).ready(function() {
             }
         }
 
+        // Check for HTTPS requirement
+        if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+            showErrorMessage("Camera access requires HTTPS. Please use manual input or access via HTTPS.");
+            return;
+        }
+
         const config = {
             fps: 10,
-            qrbox: { width: 250, height: 250 }
+            qrbox: { width: 300, height: 300 },
+            disableFlip: false,
+            rememberLastUsedCamera: true,
+            showTorchButtonIfSupported: true,
+            showZoomSliderIfSupported: true,
+            defaultZoomValueIfSupported: 2
         };
 
-        console.log("Starting camera scanner...");
+        console.log("Starting camera scanner with config:", config);
+
+        // Test callback functions
+        const testSuccessCallback = function(text, result) {
+            console.log("SUCCESS CALLBACK TEST - this should trigger when QR detected");
+            console.log("Text:", text);
+        };
+
+        const testErrorCallback = function(error) {
+            // Don't log this test as it's just for verification
+        };
+
+        console.log("Success callback function:", typeof testSuccessCallback);
+        console.log("Error callback function:", typeof testErrorCallback);
+
+        // Try different camera approaches
+        const cameraConstraints = [
+            { facingMode: "environment" }, // Back camera first
+            { facingMode: "user" },        // Front camera fallback
+            {}                             // Any available camera
+        ];
+
+        tryStartCamera(0, cameraConstraints, config);
+    }
+
+    // Try to start camera with different constraints
+    function tryStartCamera(constraintIndex, constraints, config) {
+        if (constraintIndex >= constraints.length) {
+            showErrorMessage("Unable to access any camera. Please check permissions or use manual input.");
+            return;
+        }
+
+        const currentConstraint = constraints[constraintIndex];
+        console.log(`Trying camera constraint ${constraintIndex}:`, currentConstraint);
 
         html5QrCode.start(
-            { facingMode: "environment" },
+            currentConstraint,
             config,
-            (decodedText, decodedResult) => {
-                console.log("QR Code detected:", decodedText);
-                stopScanning();
+            function(decodedText, decodedResult) {
+                console.log("=== QR CODE DETECTED BY CAMERA ===");
+                console.log("Raw decoded text:", decodedText);
+                console.log("Decoded text type:", typeof decodedText);
+                console.log("Decoded text length:", decodedText ? decodedText.length : 0);
+                console.log("Full decoded result:", decodedResult);
+
+                // Immediately call the lookup without stopping first
+                console.log("Calling lookupDpiId with:", decodedText);
                 lookupDpiId(decodedText);
+
+                // Stop scanner after a brief delay to ensure lookup starts
+                setTimeout(() => {
+                    console.log("Stopping scanner after detection");
+                    stopScanning();
+                }, 100);
             },
-            (errorMessage) => {
+            function(errorMessage) {
                 // Only log specific scan errors, ignore continuous scanning errors
-                if (!errorMessage.includes('No QR code found')) {
+                if (!errorMessage.includes('No QR code found') &&
+                    !errorMessage.includes('NotFoundException') &&
+                    !errorMessage.includes('QR code parse error') &&
+                    !errorMessage.includes('No MultiFormat Readers')) {
                     console.warn("Scanner warning:", errorMessage);
                 }
             }
@@ -106,22 +252,42 @@ $(document).ready(function() {
             isScanning = true;
             updateScanStatus(true);
             updateScannerButtons(true);
-            console.log("Camera started successfully");
-        }).catch((err) => {
-            console.error("Unable to start scanning:", err);
-            isScanning = false;
-            updateScanStatus(false);
-            updateScannerButtons(false);
+            console.log("Camera started successfully with constraint:", currentConstraint);
+            console.log("Scanner is now running and should detect QR codes");
 
-            // Provide specific error messages
-            if (err.name === 'NotAllowedError') {
-                showErrorMessage("Camera access denied. Please allow camera permissions or use manual input.");
-            } else if (err.name === 'NotFoundError') {
-                showErrorMessage("No camera found. Please use manual input instead.");
-            } else if (err.name === 'NotSupportedError') {
-                showErrorMessage("Camera not supported on this device. Please use manual input.");
+            // Add a visual confirmation
+            $("#status-indicator").css("color", "#22c55e");
+
+            // Test notification after 3 seconds
+            setTimeout(() => {
+                console.log("Scanner has been running for 3 seconds - point camera at QR code");
+            }, 3000);
+        }).catch((err) => {
+            console.error(`Failed with constraint ${constraintIndex}:`, err);
+
+            // If this is the last constraint, show specific error
+            if (constraintIndex === constraints.length - 1) {
+                isScanning = false;
+                updateScanStatus(false);
+                updateScannerButtons(false);
+
+                // Provide specific error messages
+                if (err.name === 'NotAllowedError' || err.toString().includes('Permission denied')) {
+                    showErrorMessage("Camera access denied. Please allow camera permissions in your browser or use manual input.");
+                } else if (err.name === 'NotFoundError' || err.toString().includes('No video input device')) {
+                    showErrorMessage("No camera found on this device. Please use manual input instead.");
+                } else if (err.name === 'NotSupportedError' || err.toString().includes('not supported')) {
+                    showErrorMessage("Camera not supported on this device. Please use manual input.");
+                } else if (err.toString().includes('HTTPS')) {
+                    showErrorMessage("Camera access requires HTTPS. Please use manual input or access via HTTPS.");
+                } else {
+                    showErrorMessage("Unable to access camera. Please check permissions, try manual input, or refresh the page.");
+                }
             } else {
-                showErrorMessage("Unable to access camera. Please check permissions or use manual input.");
+                // Try next constraint
+                setTimeout(() => {
+                    tryStartCamera(constraintIndex + 1, constraints, config);
+                }, 100);
             }
         });
     }
@@ -133,9 +299,19 @@ $(document).ready(function() {
                 isScanning = false;
                 updateScanStatus(false);
                 updateScannerButtons(false);
+                console.log("Camera stopped successfully");
             }).catch((err) => {
                 console.error("Failed to stop scanning:", err);
+                // Force reset state even if stop fails
+                isScanning = false;
+                updateScanStatus(false);
+                updateScannerButtons(false);
             });
+        } else if (html5QrCode) {
+            // Ensure we're in the correct state
+            isScanning = false;
+            updateScanStatus(false);
+            updateScannerButtons(false);
         }
     }
 
@@ -167,16 +343,27 @@ $(document).ready(function() {
 
     // Lookup DPI ID
     function lookupDpiId(dpiId) {
-        console.log("Looking up DPI ID:", dpiId);
+        console.log("=== LOOKUP DPI ID ===");
+        console.log("DPI ID to lookup:", dpiId);
+        console.log("DPI data available:", dpiData.length, "facilities");
+
+        if (!dpiData || dpiData.length === 0) {
+            console.error("No DPI data loaded!");
+            showErrorMessage("Database not loaded. Please refresh the page and try again.");
+            return;
+        }
 
         // Find facility by ID (case insensitive)
         const facility = dpiData.find(f =>
             f.id.toLowerCase() === dpiId.toLowerCase()
         );
 
+        console.log("Facility found:", !!facility);
         if (facility) {
+            console.log("Facility details:", facility);
             showFacilityDetails(facility);
         } else {
+            console.log("Available DPI IDs:", dpiData.map(f => f.id));
             showErrorMessage(`DPI ID "${dpiId}" not found in the database.`);
         }
     }
@@ -305,10 +492,36 @@ $(document).ready(function() {
             ` : ''}
         `;
 
-        $("#facility-details").html(detailsHtml);
-        $("#result-section").removeClass("hidden");
-        $("#error-section").addClass("hidden");
-        $(".scanner-section").addClass("hidden");
+        console.log("Setting facility details HTML...");
+        const facilityDetailsEl = $("#facility-details");
+        console.log("Facility details element found:", facilityDetailsEl.length);
+        facilityDetailsEl.html(detailsHtml);
+
+        console.log("Showing result section...");
+        const resultSection = $("#result-section");
+        console.log("Result section element found:", resultSection.length);
+        console.log("Result section classes before:", resultSection.attr("class"));
+        resultSection.removeClass("hidden").show();
+        console.log("Result section classes after:", resultSection.attr("class"));
+
+        console.log("Hiding error section...");
+        const errorSection = $("#error-section");
+        console.log("Error section element found:", errorSection.length);
+        errorSection.addClass("hidden").hide();
+
+        console.log("Hiding scanner section...");
+        const scannerSection = $(".scanner-section");
+        console.log("Scanner section element found:", scannerSection.length);
+        console.log("Scanner section classes before:", scannerSection.attr("class"));
+        scannerSection.addClass("hidden").hide();
+        console.log("Scanner section classes after:", scannerSection.attr("class"));
+
+        console.log("Final check - Result section visible:", !resultSection.hasClass("hidden"));
+        console.log("Final check - Scanner section hidden:", scannerSection.hasClass("hidden"));
+
+        // Force visibility check
+        console.log("Result section display style:", resultSection.css("display"));
+        console.log("Scanner section display style:", scannerSection.css("display"));
     }
 
     // Get technical details based on facility type
@@ -491,12 +704,22 @@ $(document).ready(function() {
 
     // Reset to scanner view
     function resetToScanner() {
-        $("#result-section").addClass("hidden");
-        $("#error-section").addClass("hidden");
-        $(".scanner-section").removeClass("hidden");
+        console.log("=== RESET TO SCANNER ===");
+
+        console.log("Hiding result section...");
+        $("#result-section").addClass("hidden").hide();
+
+        console.log("Hiding error section...");
+        $("#error-section").addClass("hidden").hide();
+
+        console.log("Showing scanner section...");
+        $(".scanner-section").removeClass("hidden").show();
 
         // Close any open modal
-        $("#manual-modal").addClass("hidden");
+        console.log("Closing any open modal...");
+        const modal = $("#manual-modal");
+        console.log("Modal found for reset:", modal.length);
+        modal.addClass("hidden").hide();
 
         // Clear any input fields
         $("#dpi-id-input").val('');
@@ -507,10 +730,27 @@ $(document).ready(function() {
         // Update scanner status
         updateScanStatus(false);
         updateScannerButtons(false);
+
+        console.log("Reset complete - scanner section visible");
+
+        // Test if event handlers are still working
+        console.log("Testing manual input button after reset...");
+        const manualBtn = $("#manual-input");
+        console.log("Manual input button found:", manualBtn.length);
+        console.log("Manual input button visible:", manualBtn.is(":visible"));
+        console.log("Manual input button disabled:", manualBtn.prop("disabled"));
     }
+
+    // Test function for manual QR code simulation
+    window.testQRScan = function(testId) {
+        console.log("=== MANUAL QR TEST ===");
+        console.log("Testing with ID:", testId || "BH-2024-001");
+        lookupDpiId(testId || "BH-2024-001");
+    };
 
     // Event Listeners
     $("#start-scan").click(function() {
+        console.log("Start scan button clicked");
         startScanning();
     });
 
@@ -519,7 +759,14 @@ $(document).ready(function() {
     });
 
     $("#manual-input").click(function() {
-        $("#manual-modal").removeClass("hidden");
+        console.log("=== MANUAL INPUT BUTTON CLICKED ===");
+        console.log("Showing manual modal...");
+        const modal = $("#manual-modal");
+        console.log("Modal element found:", modal.length);
+        console.log("Modal classes before:", modal.attr("class"));
+        modal.removeClass("hidden").show();
+        console.log("Modal classes after:", modal.attr("class"));
+        console.log("Modal visible:", modal.is(":visible"));
     });
 
     $("#close-modal").click(function() {
@@ -527,21 +774,36 @@ $(document).ready(function() {
     });
 
     $("#lookup-btn").click(function() {
-        const dpiId = $("#dpi-id-input").val().trim();
+        console.log("=== LOOKUP BUTTON CLICKED ===");
+        const dpiIdInput = $("#dpi-id-input");
+        const dpiId = dpiIdInput.val().trim();
+        console.log("DPI ID input field found:", dpiIdInput.length);
+        console.log("DPI ID value:", dpiId);
+        console.log("DPI ID length:", dpiId.length);
+
         if (dpiId) {
-            $("#manual-modal").addClass("hidden");
+            console.log("Valid DPI ID, hiding modal and looking up...");
+            $("#manual-modal").addClass("hidden").hide();
             lookupDpiId(dpiId);
-            $("#dpi-id-input").val('');
+            dpiIdInput.val('');
+        } else {
+            console.log("Empty DPI ID, not performing lookup");
         }
     });
 
     $("#dpi-id-input").keypress(function(e) {
+        console.log("=== DPI INPUT KEYPRESS ===", e.which);
         if (e.which === 13) {
+            console.log("Enter key pressed in DPI input");
             const dpiId = $(this).val().trim();
+            console.log("DPI ID from keypress:", dpiId);
             if (dpiId) {
-                $("#manual-modal").addClass("hidden");
+                console.log("Valid DPI ID from keypress, looking up...");
+                $("#manual-modal").addClass("hidden").hide();
                 lookupDpiId(dpiId);
                 $(this).val('');
+            } else {
+                console.log("Empty DPI ID from keypress");
             }
         }
     });

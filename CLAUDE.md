@@ -207,3 +207,4 @@ node generate-qr-codes.js    # Generate all QR codes
 - Advanced filtering and export functionality
 - Performance optimizations and caching strategies
 - Progressive Web App (PWA) features for offline support
+- ALWAYS update CLAUDE.md when commiting to git
