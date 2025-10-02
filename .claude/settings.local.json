@@ -10,7 +10,10 @@
       "Bash(python:*)",
       "Bash(npm install:*)",
       "Bash(npm run generate-qr:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(docker-compose:*)",
+      "Bash(python3:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []
