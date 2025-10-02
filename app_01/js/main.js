@@ -116,7 +116,7 @@ $(document).ready(function () {
                     <td colspan="5">
                         <div class="school-details-content">
                             <div class="detail-section">
-                                <h4><i class="fas fa-tint"></i> School Data</h4>
+                                <h4>School Data</h4>
                                 <div class="primary-data-table">
                                     <table>
                                         <thead>
