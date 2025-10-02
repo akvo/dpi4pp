@@ -1,0 +1,56 @@
+{
+  "title": "Distribution of Water Assets per Type",
+  "data": {
+    "labels": ["Public Taps", "Private Taps", "Protected Spring", "Groundwater Source"],
+    "values": [8, 12, 16, 20]
+  },
+  "colors": ["#00a8ff", "#00d4aa", "#ffa502", "#ff4757"],
+  "chartType": "bar",
+  "options": {
+    "responsive": true,
+    "maintainAspectRatio": false,
+    "plugins": {
+      "title": {
+        "display": true,
+        "text": "Distribution of Water Assets per Type",
+        "color": "#ffffff",
+        "font": {
+          "size": 16,
+          "weight": "bold"
+        }
+      },
+      "legend": {
+        "display": false
+      }
+    },
+    "scales": {
+      "x": {
+        "title": {
+          "display": true,
+          "text": "Water Asset Type",
+          "color": "#b0b0b0"
+        },
+        "ticks": {
+          "color": "#b0b0b0"
+        },
+        "grid": {
+          "color": "#404040"
+        }
+      },
+      "y": {
+        "title": {
+          "display": true,
+          "text": "Number of Assets",
+          "color": "#b0b0b0"
+        },
+        "ticks": {
+          "color": "#b0b0b0"
+        },
+        "grid": {
+          "color": "#404040"
+        },
+        "beginAtZero": true
+      }
+    }
+  }
+}
