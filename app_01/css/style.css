@@ -5,7 +5,7 @@
 }
 
 body {
-    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f8fafc;
     color: #1e293b;
     line-height: 1.6;
@@ -111,7 +111,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .search-bar {
@@ -180,15 +180,21 @@ body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 h1 {
     color: #1e293b;
     margin-bottom: 30px;
     font-size: 32px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-weight: 600;
 }
 
@@ -204,7 +210,7 @@ h1 {
     background-color: white;
     padding: 25px;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
     transition: all 0.3s ease;
@@ -212,7 +218,7 @@ h1 {
 
 .stat-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
 }
 
 .stat-icon {
@@ -268,14 +274,14 @@ h1 {
     background-color: white;
     padding: 25px;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .chart-card h3 {
     color: #1e293b;
     margin-bottom: 20px;
     font-size: 18px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-weight: 500;
 }
 
@@ -299,7 +305,7 @@ h1 {
 .chart-placeholder p {
     color: #64748b;
     font-size: 18px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-weight: 500;
 }
 
@@ -350,18 +356,21 @@ h1 {
 }
 
 /* Maps and Database specific styles */
-.maps-container, .database-container {
+.maps-container,
+.database-container {
     margin-top: 20px;
 }
 
-.map-controls, .db-controls {
+.map-controls,
+.db-controls {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
     flex-wrap: wrap;
 }
 
-.map-btn, .db-btn {
+.map-btn,
+.db-btn {
     background-color: #3498db;
     color: white;
     border: none;
@@ -370,22 +379,25 @@ h1 {
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 14px;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: 500;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.map-btn i, .db-btn i {
+.map-btn i,
+.db-btn i {
     font-size: 16px;
 }
 
-.map-btn:hover, .db-btn:hover {
+.map-btn:hover,
+.db-btn:hover {
     background-color: #2980b9;
 }
 
-.map-btn.active, .db-btn.active {
+.map-btn.active,
+.db-btn.active {
     background-color: #27ae60;
 }
 
@@ -396,7 +408,6 @@ h1 {
 .db-table table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
 }
 
 .db-table th,
@@ -410,7 +421,7 @@ h1 {
     background-color: #f8fafc;
     font-weight: 600;
     color: #1e293b;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
 }
 
 .db-table tbody tr {
@@ -506,7 +517,7 @@ h1 {
 .detail-section h4 {
     color: #374151;
     margin-bottom: 15px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-weight: 500;
     display: flex;
     align-items: center;
@@ -517,34 +528,40 @@ h1 {
     color: #3498db;
 }
 
-.primary-data-table, .external-data-table {
+.primary-data-table,
+.external-data-table {
     background-color: white;
     border-radius: 6px;
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.primary-data-table table, .external-data-table table {
+.primary-data-table table,
+.external-data-table table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.primary-data-table th, .primary-data-table td,
-.external-data-table th, .external-data-table td {
+.primary-data-table th,
+.primary-data-table td,
+.external-data-table th,
+.external-data-table td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #e5e7eb;
 }
 
-.primary-data-table th, .external-data-table th {
+.primary-data-table th,
+.external-data-table th {
     background-color: #f3f4f6;
     font-weight: 600;
     color: #374151;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-size: 14px;
 }
 
-.primary-data-table td, .external-data-table td {
+.primary-data-table td,
+.external-data-table td {
     color: #4b5563;
     font-size: 13px;
 }
@@ -555,7 +572,7 @@ h1 {
 }
 
 .registry-source {
-    margin-top: 10px;
+    margin: 10px;
     color: #6b7280;
     font-size: 12px;
 }
@@ -563,6 +580,62 @@ h1 {
 .registry-source i {
     color: #3498db;
     margin-right: 5px;
+}
+
+.button-section {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.get-data-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+}
+
+.get-data-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.get-data-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+}
+
+.loading-section {
+    text-align: center;
+    padding: 20px;
+}
+
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.loading-spinner i {
+    font-size: 24px;
+    color: #3498db;
+}
+
+.loading-spinner p {
+    color: #6b7280;
+    font-size: 14px;
+    margin: 0;
 }
 
 /* Status Badges */

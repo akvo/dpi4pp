@@ -22,7 +22,8 @@
       "latitude": 6.2907,
       "longitude": -10.7603
     },
-    "contractor": "AquaDrill Liberia Ltd."
+    "contractor": "AquaDrill Liberia Ltd.",
+    "submittedBy": "WASH Registry"
   },
   {
     "id": "HP-2024-015",
@@ -41,7 +42,8 @@
       "latitude": 6.2908,
       "longitude": -10.7602
     },
-    "technician": "Water Mission Liberia"
+    "technician": "Water Mission Liberia",
+    "submittedBy": "WASH Registry"
   },
   {
     "id": "WT-2024-008",
@@ -61,7 +63,8 @@
       "latitude": 6.2906,
       "longitude": -10.7604
     },
-    "supplier": "Liberia Water Solutions"
+    "supplier": "Liberia Water Solutions",
+    "submittedBy": "WASH Registry"
   },
   {
     "id": "RH-2024-003",
@@ -81,7 +84,8 @@
       "latitude": 6.2905,
       "longitude": -10.7605
     },
-    "installer": "EcoWater Liberia"
+    "installer": "EcoWater Liberia",
+    "submittedBy": "WASH Registry"
   },
   {
     "id": "BH-2024-045",
@@ -106,7 +110,8 @@
       "latitude": 5.8762,
       "longitude": -9.9259
     },
-    "contractor": "DrillWell Liberia Inc."
+    "contractor": "DrillWell Liberia Inc.",
+    "submittedBy": "WASH Registry"
   },
   {
     "id": "HP-2024-089",
@@ -125,7 +130,8 @@
       "latitude": 5.8763,
       "longitude": -9.9258
     },
-    "technician": "WaterAid Liberia"
+    "technician": "WaterAid Liberia",
+    "submittedBy": "WASH Registry"
   },
   {
     "id": "SP-2024-012",
@@ -145,7 +151,8 @@
       "latitude": 5.8761,
       "longitude": -9.9260
     },
-    "supplier": "Solar Solutions Liberia"
+    "supplier": "Solar Solutions Liberia",
+    "submittedBy": "WASH Registry"
   },
   {
     "id": "HP-2024-156",
@@ -164,7 +171,8 @@
       "latitude": 6.9972,
       "longitude": -9.4693
     },
-    "technician": "Liberia Water and Sewer Corporation"
+    "technician": "Liberia Water and Sewer Corporation",
+    "submittedBy": "WASH Registry"
   },
   {
     "id": "WL-2024-078",
@@ -184,7 +192,8 @@
       "latitude": 6.9973,
       "longitude": -9.4692
     },
-    "lastInspector": "Ministry of Health"
+    "lastInspector": "Ministry of Health",
+    "submittedBy": "WASH Registry"
   },
   {
     "id": "BH-2024-023",
@@ -209,7 +218,8 @@
       "latitude": 4.3754,
       "longitude": -7.7182
     },
-    "contractor": "Deep Water Drilling Co."
+    "contractor": "Deep Water Drilling Co.",
+    "submittedBy": "WASH Registry"
   },
   {
     "id": "HP-2024-087",
@@ -228,7 +238,8 @@
       "latitude": 4.3755,
       "longitude": -7.7181
     },
-    "technician": "Water Mission Liberia"
+    "technician": "Water Mission Liberia",
+    "submittedBy": "WASH Registry"
   },
   {
     "id": "WT-2024-045",
@@ -247,7 +258,8 @@
       "latitude": 4.3753,
       "longitude": -7.7183
     },
-    "supplier": "Steel Tanks Liberia"
+    "supplier": "Steel Tanks Liberia",
+    "submittedBy": "WASH Registry"
   },
   {
     "id": "HP-2024-023",
@@ -266,7 +278,8 @@
       "latitude": 5.0123,
       "longitude": -8.4211
     },
-    "technician": "Liberia Water and Sewer Corporation"
+    "technician": "Liberia Water and Sewer Corporation",
+    "submittedBy": "WASH Registry"
   },
   {
     "id": "RH-2024-015",
@@ -286,6 +299,130 @@
       "latitude": 5.0122,
       "longitude": -8.4212
     },
-    "installer": "Community Water Project"
+    "installer": "Community Water Project",
+    "submittedBy": "WASH Registry"
+  },
+  {
+    "id": "BH-2024-001",
+    "name": "Borehole",
+    "type": "Borehole",
+    "location": "Monrovia Central Primary School",
+    "schoolId": "SC001",
+    "functionality": "Functioning",
+    "jmpStatus": "Basic Service",
+    "lastService": "2024-08-22",
+    "nextService": "2024-11-22",
+    "depth": "45m",
+    "pumpType": "Electric Submersible",
+    "flowRate": "1900 L/hour",
+    "waterQuality": {
+      "pH": 6.7,
+      "turbidity": "3 NTU",
+      "lastTest": "2024-08-22",
+      "safe": true,
+      "bacterialTest": "Negative",
+      "chlorineResidual": "0.5 mg/L"
+    },
+    "coordinates": {
+      "latitude": 6.2907,
+      "longitude": -10.7603
+    },
+    "healthInspector": "Dr. Sarah Johnson",
+    "submittedBy": "Ministry of Health"
+  },
+  {
+    "id": "HP-2024-015",
+    "name": "Hand Pump",
+    "type": "Hand Pump",
+    "location": "Monrovia Central Primary School",
+    "schoolId": "SC001",
+    "functionality": "Functioning",
+    "jmpStatus": "Basic Service",
+    "lastService": "2024-09-03",
+    "nextService": "2024-12-03",
+    "pumpModel": "India Mark II",
+    "installationYear": 2021,
+    "sparePartsAvailable": true,
+    "coordinates": {
+      "latitude": 6.2908,
+      "longitude": -10.7602
+    },
+    "waterQuality": {
+      "pH": 6.5,
+      "turbidity": "4 NTU",
+      "lastTest": "2024-09-03",
+      "safe": true,
+      "eColi": "Absent"
+    },
+    "healthOfficer": "James Smith",
+    "submittedBy": "Ministry of Health"
+  },
+  {
+    "id": "WT-2024-008",
+    "name": "Water Tank",
+    "type": "Storage Tank",
+    "location": "Monrovia Central Primary School",
+    "schoolId": "SC001",
+    "functionality": "Functioning",
+    "jmpStatus": "Basic Service",
+    "lastService": "2024-08-25",
+    "nextService": "2025-02-25",
+    "capacity": "5000 Liters",
+    "material": "Plastic",
+    "installationYear": 2020,
+    "coordinates": {
+      "latitude": 6.2906,
+      "longitude": -10.7604
+    },
+    "structuralIntegrity": "Good",
+    "lastInspection": "2024-08-25",
+    "submittedBy": "Ministry of Public Works"
+  },
+  {
+    "id": "BH-2024-045",
+    "name": "Borehole",
+    "type": "Borehole",
+    "location": "Buchanan Secondary School",
+    "schoolId": "SC002",
+    "functionality": "Limited Service",
+    "jmpStatus": "Limited Service",
+    "lastService": "2024-08-20",
+    "nextService": "2024-11-20",
+    "depth": "38m",
+    "pumpType": "Electric Submersible",
+    "flowRate": "1200 L/hour",
+    "waterQuality": {
+      "pH": 7.2,
+      "turbidity": "2 NTU",
+      "lastTest": "2024-08-20",
+      "safe": true
+    },
+    "coordinates": {
+      "latitude": 5.8762,
+      "longitude": -9.9259
+    },
+    "issues": "Intermittent power supply",
+    "submittedBy": "Ministry of Public Works"
+  },
+  {
+    "id": "SP-2024-012",
+    "name": "Solar Pump",
+    "type": "Solar Pump",
+    "location": "Buchanan Secondary School",
+    "schoolId": "SC002",
+    "functionality": "Functioning",
+    "jmpStatus": "Basic Service",
+    "lastService": "2024-09-05",
+    "nextService": "2025-03-05",
+    "panelCapacity": "2.5 kW",
+    "batteryBackup": true,
+    "flowRate": "2000 L/hour",
+    "installationYear": 2023,
+    "coordinates": {
+      "latitude": 5.8761,
+      "longitude": -9.9260
+    },
+    "maintenanceTeam": "Public Works Solar Unit",
+    "submittedBy": "Ministry of Public Works"
   }
 ]

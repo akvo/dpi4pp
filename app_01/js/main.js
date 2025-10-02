@@ -2,20 +2,16 @@ $(document).ready(function () {
     // Load school and facility data
     let schoolsData = [];
     let facilitiesData = [];
+    let loadedSchools = new Set(); // Track schools that have loaded their facilities
 
-    async function loadData() {
+    async function loadSchoolsData() {
         try {
-            console.log("Attempting to load data with Axios...");
+            console.log("Attempting to load schools data with Axios...");
 
             // Try to load schools data
             const schoolsResponse = await axios.get("../api/schools.json");
             schoolsData = schoolsResponse.data.schools;
             console.log("Schools data loaded successfully:", schoolsData);
-
-            // Try to load DPI data
-            const facilitiesResponse = await axios.get("../api/dpi.json");
-            facilitiesData = facilitiesResponse.data;
-            console.log("DPI data loaded successfully:", facilitiesData);
 
             // Render table with loaded data
             renderSchoolsTable();
@@ -27,7 +23,24 @@ $(document).ready(function () {
             );
             console.log("Using embedded fallback data...");
         } finally {
-            console.log("Data loading process completed");
+            console.log("Schools data loading process completed");
+        }
+    }
+
+    async function loadFacilitiesData() {
+        try {
+            console.log("Attempting to load DPI data from WASH Registry...");
+
+            // Try to load DPI data
+            const facilitiesResponse = await axios.get("../api/dpi.json");
+            facilitiesData = facilitiesResponse.data.filter(facility => facility.submittedBy === "WASH Registry");
+            console.log("DPI data loaded successfully:", facilitiesData);
+            console.log("Filtered to WASH Registry data only. Total records:", facilitiesData.length);
+
+            return facilitiesData;
+        } catch (error) {
+            console.log("Failed to load DPI data:", error.message);
+            return [];
         }
     }
 
@@ -93,8 +106,19 @@ $(document).ready(function () {
                                 </div>
                             </div>
                             <div class="detail-section">
-                                <h4><i class="fas fa-database"></i> External WASH Registry Data</h4>
-                                <div class="external-data-table">
+                                <h4><i class="fas fa-database"></i> External Data</h4>
+                                <div id="button-section-${index}" class="button-section">
+                                    <button class="get-data-btn" data-school-id="${index}">
+                                        <i class="fas fa-download"></i> GET Data from WASH Registry
+                                    </button>
+                                </div>
+                                <div id="loading-${index}" class="loading-section" style="display: none; text-align: center; padding: 20px;">
+                                    <div class="loading-spinner">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <p>Fetching data from WASH Registry...</p>
+                                    </div>
+                                </div>
+                                <div id="table-section-${index}" class="external-data-table" style="display: none;">
                                     <table>
                                         <thead>
                                             <tr>
@@ -108,7 +132,7 @@ $(document).ready(function () {
                                         <tbody id="facilities-${index}">
                                         </tbody>
                                     </table>
-                                    <p class="registry-source"><small><i class="fas fa-info-circle"></i> Source: Liberia WASH Registry - Last synchronized: 2024-09-18</small></p>
+                                    <p class="registry-source" id="source-info-${index}"><small><i class="fas fa-info-circle"></i> Source: Liberia WASH Registry - Last synchronized: 2024-09-18</small></p>
                                 </div>
                             </div>
                         </div>
@@ -126,53 +150,94 @@ $(document).ready(function () {
 
     function loadSchoolFacilities(school, schoolIndex) {
         console.log(
-            `Loading facilities for school: ${school.name}, index: ${schoolIndex}`,
+            `Preparing facilities section for school: ${school.name}, index: ${schoolIndex}`,
         );
+
+        // Initially hide the table section - data will be loaded when button is clicked
+        $(`#table-section-${schoolIndex}`).hide();
+
+        if (!school.facilities || school.facilities.length === 0) {
+            // Hide the GET Data button if no facilities are available
+            $(`#button-section-${schoolIndex}`).hide();
+        }
+    }
+
+    async function fetchSchoolFacilitiesData(school, schoolIndex) {
+        console.log(`Fetching facilities data for school: ${school.name}`);
+
+        const buttonSection = $(`#button-section-${schoolIndex}`);
+        const loadingSection = $(`#loading-${schoolIndex}`);
+        const tableSection = $(`#table-section-${schoolIndex}`);
         const facilitiesTable = $(`#facilities-${schoolIndex}`);
+
+        // Show loading state
+        buttonSection.hide();
+        loadingSection.show();
+
+        // Simulate 2-second delay for external data fetching
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // Load facilities data if not already loaded
+        if (facilitiesData.length === 0) {
+            await loadFacilitiesData();
+        }
+
+        // Hide loading state
+        loadingSection.hide();
+
+        // Populate facilities table
         facilitiesTable.empty();
 
         if (!school.facilities || school.facilities.length === 0) {
             facilitiesTable.append(
                 '<tr><td colspan="5" style="text-align: center; padding: 10px;">No facilities recorded for this school</td></tr>',
             );
-            return;
+        } else {
+            school.facilities.forEach((facilityId) => {
+                const facility = facilitiesData.find((f) => f.id === facilityId);
+                if (facility) {
+                    console.log(
+                        `Found facility: ${facility.name} (${facility.id})`,
+                    );
+                    const facilityRow = $(`
+                        <tr>
+                            <td>${facility.name}</td>
+                            <td>${facility.id}</td>
+                            <td><span class="status-badge ${facility.functionality === "Functioning" ? "active" : "pending"}">${facility.functionality}</span></td>
+                            <td>${facility.jmpStatus}</td>
+                            <td>${facility.lastService}</td>
+                        </tr>
+                    `);
+                    facilitiesTable.append(facilityRow);
+                } else {
+                    console.log(`Facility not found for ID: ${facilityId}`);
+                }
+            });
         }
 
-        school.facilities.forEach((facilityId) => {
-            const facility = facilitiesData.find((f) => f.id === facilityId);
-            if (facility) {
-                console.log(
-                    `Found facility: ${facility.name} (${facility.id})`,
-                );
-                const facilityRow = $(`
-                    <tr>
-                        <td>${facility.name}</td>
-                        <td>${facility.id}</td>
-                        <td><span class="status-badge ${facility.functionality === "Functioning" ? "active" : "pending"}">${facility.functionality}</span></td>
-                        <td>${facility.jmpStatus}</td>
-                        <td>${facility.lastService}</td>
-                    </tr>
-                `);
-                facilitiesTable.append(facilityRow);
-            } else {
-                console.log(`Facility not found for ID: ${facilityId}`);
-            }
-        });
+        // Show table section and mark as loaded
+        tableSection.show();
+        loadedSchools.add(schoolIndex);
+
+        // Update summary after loading data
+        updateWASHSummary();
+
+        console.log(`Facilities data loaded for school: ${school.name}`);
     }
 
     function updateWASHSummary() {
         const totalSchools = schoolsData.length;
-        const functionalAssets = facilitiesData.filter(
+        const functionalAssets = facilitiesData.length > 0 ? facilitiesData.filter(
             (f) => f.functionality === "Functioning",
-        ).length;
+        ).length : 0;
         const schoolsWithWater = schoolsData.filter(
             (s) =>
                 s.washData.studentsWithWaterAccess / s.washData.totalStudents >
                 0.5,
         ).length;
-        const nonFunctionalAssets = facilitiesData.filter(
+        const nonFunctionalAssets = facilitiesData.length > 0 ? facilitiesData.filter(
             (f) => f.functionality !== "Functioning",
-        ).length;
+        ).length : 0;
 
         // Update summary stats (this would update the quick-stats section)
         $(".quick-stat").each(function () {
@@ -187,13 +252,13 @@ $(document).ready(function () {
                     value = `${schoolsWithWater} (${Math.round((schoolsWithWater / totalSchools) * 100)}%)`;
                     break;
                 case "Functional WASH Assets:":
-                    value = functionalAssets;
+                    value = functionalAssets > 0 ? functionalAssets : "Click 'GET Data' to load";
                     break;
                 case "Assets Needing Repair:":
-                    value = nonFunctionalAssets;
+                    value = nonFunctionalAssets > 0 ? nonFunctionalAssets : "Click 'GET Data' to load";
                     break;
                 case "Last Registry Sync:":
-                    value = "2024-09-18";
+                    value = facilitiesData.length > 0 ? "2024-09-18" : "Not synced";
                     break;
             }
 
@@ -355,6 +420,17 @@ $(document).ready(function () {
         toggleSchoolDetails($(this).closest(".school-row"));
     });
 
+    // GET Data button click handler
+    $(document).on("click", ".get-data-btn", function (e) {
+        e.stopPropagation();
+        const schoolIndex = $(this).data("school-id");
+        const school = schoolsData[schoolIndex];
+
+        if (school && !loadedSchools.has(schoolIndex)) {
+            fetchSchoolFacilitiesData(school, schoolIndex);
+        }
+    });
+
     // Database table row interactions (for non-expandable rows)
     $(".db-table tbody tr")
         .not(".school-row")
@@ -369,13 +445,13 @@ $(document).ready(function () {
     // Load data on page initialization
     console.log("=== App 01 Dashboard Initializing ===");
 
-    // Force load data immediately
-    loadData()
+    // Load only schools data initially - facilities data will be loaded on demand
+    loadSchoolsData()
         .then(() => {
-            console.log("Data loading completed");
+            console.log("Schools data loading completed");
         })
         .catch((error) => {
-            console.error("Data loading failed:", error);
+            console.error("Schools data loading failed:", error);
         });
 
     console.log("App 01 Dashboard initialized");
