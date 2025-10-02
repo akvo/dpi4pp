@@ -26,28 +26,26 @@
     "scales": {
       "x": {
         "title": {
-          "display": true,
-          "text": "Water Asset Type",
-          "color": "#b0b0b0"
+          "display": false
         },
         "ticks": {
-          "color": "#b0b0b0"
+          "display": false
         },
         "grid": {
-          "color": "#404040"
+          "display": false
         }
       },
       "y": {
         "title": {
-          "display": true,
-          "text": "Number of Assets",
-          "color": "#b0b0b0"
+          "display": false
         },
         "ticks": {
-          "color": "#b0b0b0"
+          "color": "#94a3b8",
+          "stepSize": 5,
+          "max": 20
         },
         "grid": {
-          "color": "#404040"
+          "color": "#e2e8f0"
         },
         "beginAtZero": true
       }

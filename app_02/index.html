@@ -39,46 +39,43 @@
 
       <!-- Filter Bar -->
       <div class="filter-bar">
-        <div class="filter-group">
-          <label for="period-filter">Period</label>
-          <select id="period-filter">
-            <option value="all">All Time</option>
-            <option value="2024">2024</option>
-            <option value="2023">2023</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label for="county-filter">County</label>
-          <select id="county-filter">
-            <option value="all">All Counties</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label for="asset-filter">Asset Type</label>
-          <select id="asset-filter">
-            <option value="all">All Assets</option>
-            <option value="water">Water Points</option>
-            <option value="sanitation">Sanitation</option>
-            <option value="hygiene">Hygiene</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label for="status-filter">Functional Status</label>
-          <select id="status-filter">
-            <option value="all">All Status</option>
-            <option value="functioning">Functioning</option>
-            <option value="not-functioning">Not Functioning</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label for="source-filter">Data Source</label>
-          <select id="source-filter">
-            <option value="all">All Sources</option>
-            <option value="registry">WASH Registry</option>
-            <option value="health">Ministry of Health</option>
-            <option value="education">Ministry of Education</option>
-            <option value="public-works">Ministry of Public Works</option>
-          </select>
+        <div class="filter-controls">
+          <div class="filter-group">
+            <select id="period-filter">
+              <option value="all">All Time</option>
+              <option value="2024">2024</option>
+              <option value="2023">2023</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <select id="county-filter">
+              <option value="all">All Counties</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <select id="asset-filter">
+              <option value="all">All Assets</option>
+              <option value="water">Water Points</option>
+              <option value="sanitation">Sanitation</option>
+              <option value="hygiene">Hygiene</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <select id="status-filter">
+              <option value="all">All Status</option>
+              <option value="functioning">Functioning</option>
+              <option value="not-functioning">Not Functioning</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <select id="source-filter">
+              <option value="all">All Sources</option>
+              <option value="registry">WASH Registry</option>
+              <option value="health">Ministry of Health</option>
+              <option value="education">Ministry of Education</option>
+              <option value="public-works">Ministry of Public Works</option>
+            </select>
+          </div>
         </div>
         <button class="apply-filter-btn">
           <i class="fas fa-filter"></i> Apply
@@ -120,74 +117,71 @@
         </div>
       </div>
 
-      <!-- Main Grid -->
-      <div class="main-grid">
-        <!-- Left: Map -->
-        <div class="map-section">
-          <div class="section-card">
-            <h3>Geographic Distribution</h3>
-            <div id="map" class="map-container"></div>
-            <div class="map-caption">
-              <p>WASH infrastructure distribution across Liberia counties</p>
+      <!-- Main Content -->
+      <div class="main-content">
+        <div class="section-card">
+          <div class="content-grid">
+            <!-- Left: Map -->
+            <div class="map-section">
+              <div id="map" class="map-container"></div>
             </div>
-          </div>
-        </div>
 
-        <!-- Right: Data Overview -->
-        <div class="data-section">
-          <!-- WASH Assets Overview Table -->
-          <div class="section-card">
-            <h3>WASH Assets Overview</h3>
-            <div class="table-container">
-              <table class="overview-table">
-                <thead>
-                  <tr>
-                    <th class="sortable" data-sort="ward">
-                      Ward <i class="sort-icon fas fa-sort"></i>
-                    </th>
-                    <th class="sortable" data-sort="assets">
-                      Nr of water assets <i class="sort-icon fas fa-sort"></i>
-                    </th>
-                    <th class="sortable" data-sort="percentage">
-                      % functionality <i class="sort-icon fas fa-sort"></i>
-                    </th>
-                    <th class="sortable" data-sort="population">
-                      Population served <i class="sort-icon fas fa-sort"></i>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody id="overview-tbody">
-                </tbody>
-              </table>
+            <!-- Right: Data Overview -->
+            <div class="data-section">
+              <!-- WASH Assets Overview Table -->
+              <div class="data-card">
+                <h3>WASH Assets Overview</h3>
+                <div class="table-container">
+                  <table class="overview-table">
+                    <thead>
+                      <tr>
+                        <th class="sortable" data-sort="ward">
+                          Ward <i class="sort-icon fas fa-sort"></i>
+                        </th>
+                        <th class="sortable" data-sort="assets">
+                          Nr of water assets <i class="sort-icon fas fa-sort"></i>
+                        </th>
+                        <th class="sortable" data-sort="percentage">
+                          % functionality <i class="sort-icon fas fa-sort"></i>
+                        </th>
+                        <th class="sortable" data-sort="population">
+                          Population served <i class="sort-icon fas fa-sort"></i>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody id="overview-tbody">
+                    </tbody>
+                  </table>
 
-              <!-- Pagination -->
-              <div class="table-pagination">
-                <div class="pagination-info">
-                  Showing <span id="showing-start">1</span>-<span id="showing-end">5</span> of <span id="total-records">0</span> records
-                </div>
-                <div class="pagination-controls">
-                  <button class="pagination-btn" id="prev-btn" disabled>
-                    <i class="fas fa-chevron-left"></i>
-                  </button>
-                  <div class="pagination-numbers" id="pagination-numbers">
+                  <!-- Pagination -->
+                  <div class="table-pagination">
+                    <div class="pagination-info">
+                      Showing <span id="showing-start">1</span>-<span id="showing-end">5</span> of <span id="total-records">0</span> records
+                    </div>
+                    <div class="pagination-controls">
+                      <button class="pagination-btn" id="prev-btn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                      </button>
+                      <div class="pagination-numbers" id="pagination-numbers">
+                      </div>
+                      <button class="pagination-btn" id="next-btn">
+                        <i class="fas fa-chevron-right"></i>
+                      </button>
+                    </div>
                   </div>
-                  <button class="pagination-btn" id="next-btn">
-                    <i class="fas fa-chevron-right"></i>
-                  </button>
+                </div>
+              </div>
+
+              <!-- Bar Chart -->
+              <div class="data-card">
+                <h3>Distribution of Water Assets per Type</h3>
+                <div class="chart-container">
+                  <canvas id="water-assets-chart"></canvas>
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- Bar Chart -->
-          <div class="section-card">
-            <h3>Distribution of Water Assets per Type</h3>
-            <div class="chart-container">
-              <canvas id="water-assets-chart"></canvas>
-            </div>
-          </div>
-
-          </div>
+        </div>
       </div>
     </div>
 

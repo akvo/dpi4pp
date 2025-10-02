@@ -383,24 +383,26 @@ $(document).ready(function () {
 
         legend.onAdd = function (map) {
             const div = L.DomUtil.create("div", "info legend");
-            div.style.backgroundColor = "#242424";
-            div.style.border = "1px solid #404040";
-            div.style.padding = "10px";
-            div.style.color = "#ffffff";
+            div.style.backgroundColor = "#ffffff";
+            div.style.border = "1px solid #e2e8f0";
+            div.style.padding = "12px";
+            div.style.color = "#1e293b";
             div.style.fontSize = "12px";
+            div.style.borderRadius = "8px";
+            div.style.boxShadow = "0 4px 16px rgba(0, 0, 0, 0.1)";
 
             const grades = [0, 40, 70, 100];
             const labels = [];
             const colors = ["#0d4f2d", "#2d8659", "#5cb85c"];
 
             div.innerHTML =
-                '<h4 style="margin: 0 0 10px 0; font-size: 14px;">Functionality %</h4>';
+                '<h4 style="margin: 0 0 10px 0; font-size: 14px; color: #1e293b; font-weight: 600;">Functionality %</h4>';
 
             for (let i = 0; i < grades.length - 1; i++) {
                 labels.push(
                     `<div style="display: flex; align-items: center; margin-bottom: 5px;">
-                        <div style="width: 20px; height: 10px; background-color: ${colors[i]}; border: 1px solid #404040; margin-right: 8px;"></div>
-                        <span>${grades[i]}-${grades[i + 1]}%</span>
+                        <div style="width: 20px; height: 10px; background-color: ${colors[i]}; border: 1px solid #e2e8f0; margin-right: 8px; border-radius: 2px;"></div>
+                        <span style="color: #64748b;">${grades[i]}-${grades[i + 1]}%</span>
                     </div>`,
                 );
             }
@@ -584,28 +586,26 @@ $(document).ready(function () {
                         scales: {
                             x: {
                                 title: {
-                                    display: true,
-                                    text: 'Water Asset Type',
-                                    color: '#b0b0b0'
+                                    display: false
                                 },
                                 ticks: {
-                                    color: '#b0b0b0'
+                                    display: false
                                 },
                                 grid: {
-                                    color: '#404040'
+                                    display: false
                                 }
                             },
                             y: {
                                 title: {
-                                    display: true,
-                                    text: 'Number of Assets',
-                                    color: '#b0b0b0'
+                                    display: false
                                 },
                                 ticks: {
-                                    color: '#b0b0b0'
+                                    color: '#94a3b8',
+                                    stepSize: 5,
+                                    max: 20
                                 },
                                 grid: {
-                                    color: '#404040'
+                                    color: '#e2e8f0'
                                 },
                                 beginAtZero: true
                             }
