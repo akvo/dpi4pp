@@ -3,34 +3,90 @@ $(document).ready(function() {
     let isScanning = false;
     let dpiData = [];
 
+    // Check if required libraries are loaded
+    function checkLibraries() {
+        if (typeof $ === 'undefined') {
+            console.error("jQuery not loaded");
+            return false;
+        }
+        if (typeof axios === 'undefined') {
+            console.error("Axios not loaded");
+            return false;
+        }
+        if (typeof Html5Qrcode === 'undefined') {
+            console.error("Html5Qrcode library not loaded");
+            return false;
+        }
+        console.log("All libraries loaded successfully");
+        return true;
+    }
+
+    // Initialize app
+    function initializeApp() {
+        if (!checkLibraries()) {
+            showErrorMessage("Required libraries failed to load. Please refresh the page.");
+            return;
+        }
+
+        // Load DPI data and initialize scanner
+        loadDpiData();
+        initScanner();
+    }
+
     // Load DPI data
     async function loadDpiData() {
         try {
             console.log("Loading DPI data...");
-            const response = await axios.get("../api/dpi.json");
+            // Try both relative paths for local and GitHub Pages
+            let dataUrl;
+            if (window.location.pathname.includes('/dpi4pp/')) {
+                dataUrl = "../api/dpi.json";
+            } else {
+                dataUrl = "/api/dpi.json";
+            }
+
+            console.log("Attempting to load from:", dataUrl);
+            const response = await axios.get(dataUrl);
             dpiData = response.data;
             console.log("DPI data loaded successfully:", dpiData.length, "facilities");
         } catch (error) {
             console.error("Failed to load DPI data:", error);
+            console.error("Error details:", error.response?.status, error.response?.statusText);
             showErrorMessage("Failed to load facility database. Please try again later.");
         }
     }
 
     // Initialize scanner
     function initScanner() {
-        html5QrCode = new Html5Qrcode("qr-reader");
+        try {
+            if (typeof Html5Qrcode === 'undefined') {
+                console.error("Html5Qrcode library not loaded");
+                showErrorMessage("QR scanner library failed to load. Please refresh the page.");
+                return;
+            }
+            html5QrCode = new Html5Qrcode("qr-reader");
+            console.log("Scanner initialized successfully");
+        } catch (error) {
+            console.error("Failed to initialize scanner:", error);
+            showErrorMessage("Failed to initialize camera scanner. Please use manual input instead.");
+        }
     }
 
     // Start scanning
     function startScanning() {
         if (!html5QrCode) {
             initScanner();
+            if (!html5QrCode) {
+                return; // Initialization failed
+            }
         }
 
         const config = {
             fps: 10,
             qrbox: { width: 250, height: 250 }
         };
+
+        console.log("Starting camera scanner...");
 
         html5QrCode.start(
             { facingMode: "environment" },
@@ -41,15 +97,32 @@ $(document).ready(function() {
                 lookupDpiId(decodedText);
             },
             (errorMessage) => {
-                // Ignore scan errors
+                // Only log specific scan errors, ignore continuous scanning errors
+                if (!errorMessage.includes('No QR code found')) {
+                    console.warn("Scanner warning:", errorMessage);
+                }
             }
         ).then(() => {
             isScanning = true;
             updateScanStatus(true);
             updateScannerButtons(true);
+            console.log("Camera started successfully");
         }).catch((err) => {
             console.error("Unable to start scanning:", err);
-            showErrorMessage("Unable to access camera. Please check permissions or use manual input.");
+            isScanning = false;
+            updateScanStatus(false);
+            updateScannerButtons(false);
+
+            // Provide specific error messages
+            if (err.name === 'NotAllowedError') {
+                showErrorMessage("Camera access denied. Please allow camera permissions or use manual input.");
+            } else if (err.name === 'NotFoundError') {
+                showErrorMessage("No camera found. Please use manual input instead.");
+            } else if (err.name === 'NotSupportedError') {
+                showErrorMessage("Camera not supported on this device. Please use manual input.");
+            } else {
+                showErrorMessage("Unable to access camera. Please check permissions or use manual input.");
+            }
         });
     }
 
@@ -489,6 +562,5 @@ $(document).ready(function() {
     });
 
     // Initialize app
-    loadDpiData();
-    initScanner();
+    initializeApp();
 });
