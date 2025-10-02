@@ -17,7 +17,19 @@ A comprehensive WASH (Water, Sanitation, and Hygiene) management system for Libe
   - JMP status tracking
   - Service schedule monitoring
 
-### 2. DPI Scanner
+### 2. WASH Registry Liberia Dashboard
+- **URL**: `/app_02/`
+- **Features**: Comprehensive WASH infrastructure monitoring and visualization
+- **Functionality**:
+  - Interactive geographic map with Liberia district boundaries
+  - Real-time KPI cards (Total WASH IDs, % Functional, New IDs)
+  - Advanced filtering by Period, County, Asset Type, Functional Status, and Data Source
+  - WASH Assets Overview table with pagination
+  - Chart.js visualization of water assets distribution by type
+  - Support for multiple data sources (WASH Registry, Ministry of Health, Ministry of Education, Ministry of Public Works)
+  - Dark theme with responsive design
+
+### 3. DPI Scanner
 - **URL**: `/app_03/`
 - **Features**: Mobile-friendly barcode/QR code scanner
 - **Functionality**:
@@ -26,7 +38,7 @@ A comprehensive WASH (Water, Sanitation, and Hygiene) management system for Libe
   - Instant facility data lookup
   - Offline-capable design
 
-### 3. QR Code Library
+### 4. QR Code Library
 - **URL**: `/api/barcode/`
 - **Features**: Complete library of facility QR codes
 - **Functionality**:
@@ -39,7 +51,8 @@ A comprehensive WASH (Water, Sanitation, and Hygiene) management system for Libe
 
 - **Frontend**: HTML5, CSS3, JavaScript (jQuery)
 - **Icons**: Font Awesome 6.4.0
-- **Maps**: Leaflet.js
+- **Maps**: Leaflet.js with TopoJSON support
+- **Charts**: Chart.js for data visualization
 - **Barcodes**: HTML5-QRCode
 - **Data**: JSON-based REST API
 - **Deployment**: GitHub Pages
@@ -145,7 +158,14 @@ dpi4pp/
 │   ├── index.html
 │   ├── css/style.css
 │   └── js/main.js
-├── app_02/                 # Placeholder Application
+├── app_02/                 # WASH Registry Liberia Dashboard
+│   ├── index.html
+│   ├── css/style.css
+│   ├── js/main.js
+│   ├── data/               # Chart data configurations
+│   │   └── water-assets.json
+│   └── source/             # Geographic data
+│       └── liberia.json
 ├── app_03/                 # DPI Scanner
 │   ├── index.html
 │   ├── css/style.css
@@ -170,7 +190,7 @@ dpi4pp/
 The `nginx.conf` file defines:
 - Static file serving
 - API endpoints (`/api/`)
-- Application routes (`/app_01/`, `/app_03/`)
+- Application routes (`/app_01/`, `/app_02/`, `/app_03/`)
 - CORS headers for development
 
 ### Docker Configuration
