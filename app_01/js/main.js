@@ -33,9 +33,14 @@ $(document).ready(function () {
 
             // Try to load DPI data
             const facilitiesResponse = await axios.get("../api/dpi.json");
-            facilitiesData = facilitiesResponse.data.filter(facility => facility.submittedBy === "WASH Registry");
+            facilitiesData = facilitiesResponse.data.filter(
+                (facility) => facility.submittedBy === "WASH Registry",
+            );
             console.log("DPI data loaded successfully:", facilitiesData);
-            console.log("Filtered to WASH Registry data only. Total records:", facilitiesData.length);
+            console.log(
+                "Filtered to WASH Registry data only. Total records:",
+                facilitiesData.length,
+            );
 
             return facilitiesData;
         } catch (error) {
@@ -70,7 +75,7 @@ $(document).ready(function () {
             `);
 
             // Create facility rows for WASH Data section
-            let facilityRows = '';
+            let facilityRows = "";
             if (school.facilities && school.facilities.length > 0) {
                 school.facilities.forEach((facility, fIndex) => {
                     facilityRows += `
@@ -111,7 +116,7 @@ $(document).ready(function () {
                     <td colspan="5">
                         <div class="school-details-content">
                             <div class="detail-section">
-                                <h4><i class="fas fa-tint"></i> Primary WASH Data</h4>
+                                <h4><i class="fas fa-tint"></i> School Data</h4>
                                 <div class="primary-data-table">
                                     <table>
                                         <thead>
@@ -155,7 +160,9 @@ $(document).ready(function () {
     async function loadFacilityDetails(facilityId, schoolIndex, facilityIndex) {
         console.log(`Loading facility details for: ${facilityId}`);
 
-        const loadingDiv = $(`#facility-loading-${schoolIndex}-${facilityIndex}`);
+        const loadingDiv = $(
+            `#facility-loading-${schoolIndex}-${facilityIndex}`,
+        );
         const dataDiv = $(`#facility-data-${schoolIndex}-${facilityIndex}`);
         const tbody = $(`#facility-tbody-${schoolIndex}-${facilityIndex}`);
 
@@ -164,7 +171,7 @@ $(document).ready(function () {
         dataDiv.hide();
 
         // Simulate delay for fetching
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         // Load facilities data if not already loaded
         if (facilitiesData.length === 0) {
@@ -172,81 +179,153 @@ $(document).ready(function () {
         }
 
         // Find the facility data
-        const facility = facilitiesData.find(f => f.id === facilityId);
+        const facility = facilitiesData.find((f) => f.id === facilityId);
 
         if (facility) {
             tbody.empty();
 
             // Add facility details as rows
             const details = [
-                { indicator: 'Type', value: facility.type || 'N/A' },
-                { indicator: 'Location', value: facility.location || 'N/A' },
-                { indicator: 'Functionality', value: `<span class="status-badge ${facility.functionality === 'Functioning' ? 'active' : 'pending'}">${facility.functionality}</span>` },
-                { indicator: 'JMP Status', value: facility.jmpStatus || 'N/A' },
-                { indicator: 'Last Service', value: facility.lastService || 'N/A' },
-                { indicator: 'Next Service', value: facility.nextService || 'N/A' }
+                { indicator: "Type", value: facility.type || "N/A" },
+                { indicator: "Location", value: facility.location || "N/A" },
+                {
+                    indicator: "Functionality",
+                    value: `<span class="status-badge ${facility.functionality === "Functioning" ? "active" : "pending"}">${facility.functionality}</span>`,
+                },
+                { indicator: "JMP Status", value: facility.jmpStatus || "N/A" },
+                {
+                    indicator: "Last Service",
+                    value: facility.lastService || "N/A",
+                },
+                {
+                    indicator: "Next Service",
+                    value: facility.nextService || "N/A",
+                },
             ];
 
             // Add specific details based on facility type
-            if (facility.type === 'Borehole') {
+            if (facility.type === "Borehole") {
                 details.push(
-                    { indicator: 'Depth', value: facility.depth || 'N/A' },
-                    { indicator: 'Pump Type', value: facility.pumpType || 'N/A' },
-                    { indicator: 'Flow Rate', value: facility.flowRate || 'N/A' }
+                    { indicator: "Depth", value: facility.depth || "N/A" },
+                    {
+                        indicator: "Pump Type",
+                        value: facility.pumpType || "N/A",
+                    },
+                    {
+                        indicator: "Flow Rate",
+                        value: facility.flowRate || "N/A",
+                    },
                 );
                 if (facility.waterQuality) {
                     details.push(
-                        { indicator: 'Water pH', value: facility.waterQuality.pH || 'N/A' },
-                        { indicator: 'Turbidity', value: facility.waterQuality.turbidity || 'N/A' },
-                        { indicator: 'Water Safe', value: facility.waterQuality.safe ? 'Yes' : 'No' }
+                        {
+                            indicator: "Water pH",
+                            value: facility.waterQuality.pH || "N/A",
+                        },
+                        {
+                            indicator: "Turbidity",
+                            value: facility.waterQuality.turbidity || "N/A",
+                        },
+                        {
+                            indicator: "Water Safe",
+                            value: facility.waterQuality.safe ? "Yes" : "No",
+                        },
                     );
                 }
-            } else if (facility.type === 'Hand Pump') {
+            } else if (facility.type === "Hand Pump") {
                 details.push(
-                    { indicator: 'Pump Model', value: facility.pumpModel || 'N/A' },
-                    { indicator: 'Installation Year', value: facility.installationYear || 'N/A' },
-                    { indicator: 'Spare Parts Available', value: facility.sparePartsAvailable ? 'Yes' : 'No' }
+                    {
+                        indicator: "Pump Model",
+                        value: facility.pumpModel || "N/A",
+                    },
+                    {
+                        indicator: "Installation Year",
+                        value: facility.installationYear || "N/A",
+                    },
+                    {
+                        indicator: "Spare Parts Available",
+                        value: facility.sparePartsAvailable ? "Yes" : "No",
+                    },
                 );
-            } else if (facility.type === 'Storage Tank') {
+            } else if (facility.type === "Storage Tank") {
                 details.push(
-                    { indicator: 'Capacity', value: facility.capacity || 'N/A' },
-                    { indicator: 'Material', value: facility.material || 'N/A' },
-                    { indicator: 'Installation Year', value: facility.installationYear || 'N/A' }
+                    {
+                        indicator: "Capacity",
+                        value: facility.capacity || "N/A",
+                    },
+                    {
+                        indicator: "Material",
+                        value: facility.material || "N/A",
+                    },
+                    {
+                        indicator: "Installation Year",
+                        value: facility.installationYear || "N/A",
+                    },
                 );
-            } else if (facility.type === 'Solar Pump') {
+            } else if (facility.type === "Solar Pump") {
                 details.push(
-                    { indicator: 'Panel Capacity', value: facility.panelCapacity || 'N/A' },
-                    { indicator: 'Battery Backup', value: facility.batteryBackup ? 'Yes' : 'No' },
-                    { indicator: 'Flow Rate', value: facility.flowRate || 'N/A' }
+                    {
+                        indicator: "Panel Capacity",
+                        value: facility.panelCapacity || "N/A",
+                    },
+                    {
+                        indicator: "Battery Backup",
+                        value: facility.batteryBackup ? "Yes" : "No",
+                    },
+                    {
+                        indicator: "Flow Rate",
+                        value: facility.flowRate || "N/A",
+                    },
                 );
-            } else if (facility.type === 'Rainwater System') {
+            } else if (facility.type === "Rainwater System") {
                 details.push(
-                    { indicator: 'Roof Area', value: facility.roofArea || 'N/A' },
-                    { indicator: 'Tank Capacity', value: facility.tankCapacity || 'N/A' },
-                    { indicator: 'First Flush', value: facility.firstFlush ? 'Yes' : 'No' },
-                    { indicator: 'Filtration', value: facility.filtration ? 'Yes' : 'No' }
+                    {
+                        indicator: "Roof Area",
+                        value: facility.roofArea || "N/A",
+                    },
+                    {
+                        indicator: "Tank Capacity",
+                        value: facility.tankCapacity || "N/A",
+                    },
+                    {
+                        indicator: "First Flush",
+                        value: facility.firstFlush ? "Yes" : "No",
+                    },
+                    {
+                        indicator: "Filtration",
+                        value: facility.filtration ? "Yes" : "No",
+                    },
                 );
-            } else if (facility.type === 'Dug Well') {
+            } else if (facility.type === "Dug Well") {
                 details.push(
-                    { indicator: 'Depth', value: facility.depth || 'N/A' },
-                    { indicator: 'Lining', value: facility.lining || 'N/A' },
-                    { indicator: 'Cover', value: facility.cover || 'N/A' }
+                    { indicator: "Depth", value: facility.depth || "N/A" },
+                    { indicator: "Lining", value: facility.lining || "N/A" },
+                    { indicator: "Cover", value: facility.cover || "N/A" },
                 );
             }
 
             // Add contractor/technician info if available
             if (facility.contractor) {
-                details.push({ indicator: 'Contractor', value: facility.contractor });
+                details.push({
+                    indicator: "Contractor",
+                    value: facility.contractor,
+                });
             }
             if (facility.technician) {
-                details.push({ indicator: 'Technician', value: facility.technician });
+                details.push({
+                    indicator: "Technician",
+                    value: facility.technician,
+                });
             }
             if (facility.submittedBy) {
-                details.push({ indicator: 'Data Source', value: facility.submittedBy });
+                details.push({
+                    indicator: "Data Source",
+                    value: facility.submittedBy,
+                });
             }
 
             // Render the details
-            details.forEach(detail => {
+            details.forEach((detail) => {
                 tbody.append(`
                     <tr>
                         <td>${detail.indicator}</td>
@@ -255,7 +334,9 @@ $(document).ready(function () {
                 `);
             });
         } else {
-            tbody.html('<tr><td colspan="2" style="text-align: center;">Facility data not found</td></tr>');
+            tbody.html(
+                '<tr><td colspan="2" style="text-align: center;">Facility data not found</td></tr>',
+            );
         }
 
         // Hide loading and show data
@@ -264,45 +345,59 @@ $(document).ready(function () {
     }
 
     // Handler for facility expand button
-    $(document).on('click', '.facility-expand-btn', async function(e) {
+    $(document).on("click", ".facility-expand-btn", async function (e) {
         e.stopPropagation();
 
         const $btn = $(this);
-        const facilityId = $btn.data('facility-id');
-        const schoolIndex = $btn.data('school-index');
-        const facilityIndex = $btn.data('facility-index');
-        const $detailsRow = $(`#facility-${schoolIndex}-${facilityIndex}-details`);
+        const facilityId = $btn.data("facility-id");
+        const schoolIndex = $btn.data("school-index");
+        const facilityIndex = $btn.data("facility-index");
+        const $detailsRow = $(
+            `#facility-${schoolIndex}-${facilityIndex}-details`,
+        );
 
-        if ($detailsRow.is(':visible')) {
+        if ($detailsRow.is(":visible")) {
             // Collapse
             $detailsRow.slideUp(200);
-            $btn.html('<i class="fas fa-download"></i> Get Additional Data from WASH Registry');
+            $btn.html(
+                '<i class="fas fa-download"></i> Get Additional Data from WASH Registry',
+            );
         } else {
             // Expand and load data
             $detailsRow.slideDown(200);
             $btn.html('<i class="fas fa-chevron-up"></i> Hide Additional Data');
 
             // Load facility details if not already loaded
-            if (!$detailsRow.data('loaded')) {
-                await loadFacilityDetails(facilityId, schoolIndex, facilityIndex);
-                $detailsRow.data('loaded', true);
+            if (!$detailsRow.data("loaded")) {
+                await loadFacilityDetails(
+                    facilityId,
+                    schoolIndex,
+                    facilityIndex,
+                );
+                $detailsRow.data("loaded", true);
             }
         }
     });
 
     function updateWASHSummary() {
         const totalSchools = schoolsData.length;
-        const functionalAssets = facilitiesData.length > 0 ? facilitiesData.filter(
-            (f) => f.functionality === "Functioning",
-        ).length : 0;
+        const functionalAssets =
+            facilitiesData.length > 0
+                ? facilitiesData.filter(
+                      (f) => f.functionality === "Functioning",
+                  ).length
+                : 0;
         const schoolsWithWater = schoolsData.filter(
             (s) =>
                 s.washData.studentsWithWaterAccess / s.washData.totalStudents >
                 0.5,
         ).length;
-        const nonFunctionalAssets = facilitiesData.length > 0 ? facilitiesData.filter(
-            (f) => f.functionality !== "Functioning",
-        ).length : 0;
+        const nonFunctionalAssets =
+            facilitiesData.length > 0
+                ? facilitiesData.filter(
+                      (f) => f.functionality !== "Functioning",
+                  ).length
+                : 0;
 
         // Update summary stats (this would update the quick-stats section)
         $(".quick-stat").each(function () {
@@ -317,13 +412,20 @@ $(document).ready(function () {
                     value = `${schoolsWithWater} (${Math.round((schoolsWithWater / totalSchools) * 100)}%)`;
                     break;
                 case "Functional WASH Assets:":
-                    value = functionalAssets > 0 ? functionalAssets : "Click 'GET Data' to load";
+                    value =
+                        functionalAssets > 0
+                            ? functionalAssets
+                            : "Click 'GET Data' to load";
                     break;
                 case "Assets Needing Repair:":
-                    value = nonFunctionalAssets > 0 ? nonFunctionalAssets : "Click 'GET Data' to load";
+                    value =
+                        nonFunctionalAssets > 0
+                            ? nonFunctionalAssets
+                            : "Click 'GET Data' to load";
                     break;
                 case "Last Registry Sync:":
-                    value = facilitiesData.length > 0 ? "2024-09-18" : "Not synced";
+                    value =
+                        facilitiesData.length > 0 ? "2024-09-18" : "Not synced";
                     break;
             }
 
@@ -484,7 +586,6 @@ $(document).ready(function () {
         e.stopPropagation();
         toggleSchoolDetails($(this).closest(".school-row"));
     });
-
 
     // Database table row interactions (for non-expandable rows)
     $(".db-table tbody tr")
