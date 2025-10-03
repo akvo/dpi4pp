@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link
@@ -308,28 +308,32 @@
             <h1 class="page-title">Liberia School Management Information System</h1>
 
             <div class="database-container">
-              <div class="filters-bar">
-                <button class="filter-btn">
-                  <i class="fas fa-filter"></i> Filter By
-                </button>
-                <div class="filter-dropdown">
-                  <select class="filter-select">
-                    <option>Schools</option>
-                    <option>Primary</option>
-                    <option>Secondary</option>
-                  </select>
-                  <i class="fas fa-chevron-down"></i>
+              <div class="filter-bar">
+                <div class="filter-controls">
+                  <div class="filter-group">
+                    <select id="school-type-filter">
+                      <option value="all">All Schools</option>
+                      <option value="primary">Primary</option>
+                      <option value="secondary">Secondary</option>
+                    </select>
+                  </div>
+                  <div class="filter-group">
+                    <select id="province-filter">
+                      <option value="all">All Provinces</option>
+                      <option value="montserrado">Montserrado</option>
+                      <option value="grand-bassa">Grand Bassa</option>
+                    </select>
+                  </div>
+                  <div class="filter-group">
+                    <select id="wash-status-filter">
+                      <option value="all">All WASH Status</option>
+                      <option value="functioning">Functioning</option>
+                      <option value="needs-repair">Needs Repair</option>
+                    </select>
+                  </div>
                 </div>
-                <div class="filter-dropdown">
-                  <input type="text" placeholder="Order Type" class="filter-input" />
-                  <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="filter-dropdown">
-                  <input type="text" placeholder="Order Status" class="filter-input" />
-                  <i class="fas fa-chevron-down"></i>
-                </div>
-                <button class="reset-filter-btn">
-                  <i class="fas fa-undo"></i> Reset Filter
+                <button class="apply-filter-btn">
+                  <i class="fas fa-filter"></i> Apply
                 </button>
               </div>
 
@@ -354,6 +358,21 @@
                       </tbody>
                     </table>
                   </div>
+                  <div class="pagination">
+                    <div class="pagination-info">
+                      Showing 1-5 of 7 schools
+                    </div>
+                    <div class="pagination-controls">
+                      <button class="pagination-btn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                      </button>
+                      <button class="pagination-btn active">1</button>
+                      <button class="pagination-btn">2</button>
+                      <button class="pagination-btn">
+                        <i class="fas fa-chevron-right"></i>
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="sidebar-content">
@@ -363,17 +382,17 @@
                       <div class="summary-item">
                         <i class="fas fa-school"></i>
                         <span class="summary-label">Total Schools:</span>
-                        <span class="summary-value">5</span>
+                        <span class="summary-value">7</span>
                       </div>
                       <div class="summary-item">
                         <i class="fas fa-tint"></i>
                         <span class="summary-label">School water access</span>
-                        <span class="summary-value">5(100%)</span>
+                        <span class="summary-value">7 (100%)</span>
                       </div>
                       <div class="summary-item">
                         <i class="fas fa-check-circle"></i>
                         <span class="summary-label">Functional Wash Assets:</span>
-                        <span class="summary-value">12</span>
+                        <span class="summary-value">19</span>
                       </div>
                       <div class="summary-item">
                         <i class="fas fa-tools"></i>
@@ -383,7 +402,7 @@
                       <div class="summary-item">
                         <i class="fas fa-sync"></i>
                         <span class="summary-label">Last registry sync:</span>
-                        <span class="summary-value">2</span>
+                        <span class="summary-value">Sept 20, 2024</span>
                       </div>
                     </div>
                   </div>
@@ -394,9 +413,7 @@
                       <button class="learn-more-btn">Learn more</button>
                     </div>
                     <div class="download-illustration">
-                      <div class="phone-mockup">
-                        <i class="fas fa-mobile-alt"></i>
-                      </div>
+                      <img src="images/mobile_app.png" alt="Mobile App" class="mobile-app-image" />
                     </div>
                   </div>
                 </div>

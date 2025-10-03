@@ -148,11 +148,72 @@
         "phone": "+231-777-7890",
         "email": "greenville.junior@edu.lr"
       }
+    },
+    {
+      "id": "SC006",
+      "name": "Kakata Community School",
+      "type": "Primary",
+      "province": "Margibi",
+      "lastUpdated": "2024-09-20",
+      "washData": {
+        "studentsWithWaterAccess": 280,
+        "totalStudents": 320,
+        "functionalToilets": 10,
+        "totalToilets": 12,
+        "handwashingStations": 15,
+        "waterStorageCapacity": 4500,
+        "storageUnit": "Liters"
+      },
+      "facilities": [
+        {"id": "BH-2024-067", "name": "Borehole"},
+        {"id": "HP-2024-203", "name": "Hand Pump"},
+        {"id": "WT-2024-052", "name": "Water Tank"}
+      ],
+      "coordinates": {
+        "latitude": 6.5283,
+        "longitude": -10.3514
+      },
+      "contact": {
+        "principal": "Mr. David Anderson",
+        "phone": "+231-886-4512",
+        "email": "kakata.community@edu.lr"
+      }
+    },
+    {
+      "id": "SC007",
+      "name": "Zwedru High School",
+      "type": "Secondary",
+      "province": "Grand Gedeh",
+      "lastUpdated": "2024-09-19",
+      "washData": {
+        "studentsWithWaterAccess": 410,
+        "totalStudents": 480,
+        "functionalToilets": 16,
+        "totalToilets": 18,
+        "handwashingStations": 22,
+        "waterStorageCapacity": 7500,
+        "storageUnit": "Liters"
+      },
+      "facilities": [
+        {"id": "BH-2024-089", "name": "Borehole"},
+        {"id": "HP-2024-245", "name": "Hand Pump"},
+        {"id": "SP-2024-034", "name": "Solar Pump"},
+        {"id": "WT-2024-071", "name": "Water Tank"}
+      ],
+      "coordinates": {
+        "latitude": 6.0667,
+        "longitude": -8.1333
+      },
+      "contact": {
+        "principal": "Mrs. Grace Wilson",
+        "phone": "+231-777-9876",
+        "email": "zwedru.high@edu.lr"
+      }
     }
   ],
   "metadata": {
-    "totalSchools": 5,
-    "lastSync": "2024-09-18T10:30:00Z",
+    "totalSchools": 7,
+    "lastSync": "2024-09-20T14:45:00Z",
     "dataSource": "Liberia Ministry of Education"
   }
 }
