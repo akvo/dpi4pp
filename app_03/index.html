@@ -69,12 +69,9 @@
             <div class="scanner-overlay">
               <div class="scan-line"></div>
             </div>
-          </div>
-
-          <div class="scan-status">
-            <span id="status-indicator" class="status-indicator inactive">
-              <i class="fas fa-circle"></i> Ready to Scan
-            </span>
+            <div class="scan-status">
+              <div id="status-indicator" class="status-indicator inactive"></div>
+            </div>
           </div>
 
           <div class="scanner-controls">
@@ -109,12 +106,35 @@
 
         <!-- Result Section -->
         <div id="result-section" class="result-section hidden">
-          <div class="result-header">
-            <h2>DPI Facility Information</h2>
+          <div class="detail-hero">
+            <img id="detail-hero-image" src="" alt="Facility" class="detail-hero-image" />
+            <button id="detail-back-btn" class="detail-back-btn">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="detail-hero-overlay">
+              <h1 id="detail-facility-name" class="detail-facility-name"></h1>
+              <p id="detail-facility-id" class="detail-facility-id"></p>
+              <p id="detail-facility-location" class="detail-facility-location">
+                <i class="fas fa-map-marker-alt"></i> <span></span>
+              </p>
+            </div>
           </div>
 
-          <div id="facility-details" class="facility-details">
-            <!-- Facility details will be populated here -->
+          <div class="detail-content">
+            <div class="detail-overview-header">
+              <h2>Overview</h2>
+              <span id="detail-status-badge" class="detail-status-badge"></span>
+            </div>
+
+            <div id="detail-description" class="detail-description">
+              <!-- Description will be populated here -->
+            </div>
+          </div>
+
+          <div class="complain-btn-container">
+            <button class="complain-btn">
+              <i class="fas fa-exclamation-circle"></i> Make a complain
+            </button>
           </div>
         </div>
 

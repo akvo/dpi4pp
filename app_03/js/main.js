@@ -257,9 +257,6 @@ $(document).ready(function() {
             console.log("Camera started successfully with constraint:", currentConstraint);
             console.log("Scanner is now running and should detect QR codes");
 
-            // Add a visual confirmation
-            $("#status-indicator").css("color", "#22c55e");
-
             // Test notification after 3 seconds
             setTimeout(() => {
                 console.log("Scanner has been running for 3 seconds - point camera at QR code");
@@ -322,10 +319,8 @@ $(document).ready(function() {
         const indicator = $("#status-indicator");
         if (active) {
             indicator.removeClass("inactive").addClass("active");
-            indicator.html('<i class="fas fa-circle"></i> Scanning...');
         } else {
             indicator.removeClass("active").addClass("inactive");
-            indicator.html('<i class="fas fa-circle"></i> Ready to Scan');
         }
     }
 
@@ -383,6 +378,85 @@ $(document).ready(function() {
         // Always show scanner icon when on detail page
         $("#center-icon").removeClass("fa-search").addClass("fa-qrcode");
 
+        // Get image URL
+        let imageUrl = facility.image || `https://placehold.co/400x300/e5e7eb/6b7280?text=${encodeURIComponent(facility.type)}`;
+        if (facility.image && facility.image.startsWith('/api/')) {
+            imageUrl = '..' + facility.image;
+        }
+
+        // Set hero image
+        $("#detail-hero-image").attr("src", imageUrl);
+
+        // Set facility info
+        $("#detail-facility-name").text(facility.type);
+        $("#detail-facility-id").text(`# ${facility.id}`);
+        $("#detail-facility-location span").text(facility.location);
+
+        // Set status badge
+        const statusClass = facility.functionality === "Functioning" ? "functioning" : "not-functioning";
+        const statusText = facility.functionality === "Functioning" ? "Functioning" : "No function";
+        $("#detail-status-badge")
+            .removeClass("functioning not-functioning")
+            .addClass(statusClass)
+            .text(statusText);
+
+        // Generate description
+        const description = generateFacilityDescription(facility);
+        $("#detail-description").html(description);
+
+        // Show result section
+        $("#result-section").removeClass("hidden");
+        $("#error-section").addClass("hidden");
+        $("#scanner-view").addClass("hidden");
+        $("#facilities-list").addClass("hidden");
+    }
+
+    // Generate facility description
+    function generateFacilityDescription(facility) {
+        let description = `<p>This ${facility.type.toLowerCase()}, located in ${facility.location}, Liberia, `;
+
+        if (facility.functionality === "Functioning") {
+            description += `is currently functional and provides access to clean water for the surrounding community.`;
+        } else {
+            description += `is currently non-functional and does not provide access to clean water for the surrounding community.`;
+        }
+
+        if (facility.issue) {
+            description += ` The exact cause of the malfunction is: ${facility.issue}.`;
+        }
+
+        if (facility.lastService) {
+            description += ` Last serviced on ${facility.lastService}.`;
+        }
+
+        // Add technical details
+        const technicalDetails = getTechnicalSummary(facility);
+        if (technicalDetails) {
+            description += `</p><p><strong>Technical Details:</strong> ${technicalDetails}</p>`;
+        } else {
+            description += `</p>`;
+        }
+
+        return description;
+    }
+
+    // Get technical summary
+    function getTechnicalSummary(facility) {
+        const details = [];
+
+        if (facility.depth) details.push(`Depth: ${facility.depth}`);
+        if (facility.pumpType) details.push(`Pump Type: ${facility.pumpType}`);
+        if (facility.flowRate) details.push(`Flow Rate: ${facility.flowRate}`);
+        if (facility.capacity) details.push(`Capacity: ${facility.capacity}`);
+        if (facility.material) details.push(`Material: ${facility.material}`);
+        if (facility.pumpModel) details.push(`Model: ${facility.pumpModel}`);
+        if (facility.panelCapacity) details.push(`Solar Panel: ${facility.panelCapacity}`);
+
+        return details.join(', ');
+    }
+
+    // Old detail cards function - keeping structure for compatibility
+    function generateOldDetailCards() {
         const detailsHtml = `
             <div class="detail-card">
                 <h4><i class="fas fa-info-circle"></i> Basic Information</h4>
@@ -903,6 +977,14 @@ $(document).ready(function() {
                 stopScanning();
             }
         }
+    });
+
+    // Detail page back button
+    $("#detail-back-btn").click(function() {
+        $("#result-section").addClass("hidden");
+        $("#facilities-list").removeClass("hidden");
+        $("#center-icon").removeClass("fa-search").addClass("fa-qrcode");
+        currentView = 'list';
     });
 
     // Close modal when clicking outside
