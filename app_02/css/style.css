@@ -29,7 +29,7 @@
 }
 
 body {
-  font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Montserrat", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
@@ -67,7 +67,7 @@ body {
 .header-title h1 {
   font-size: 1.5rem;
   font-weight: 600;
-  font-family: "Inter", sans-serif;
+  font-family: "Montserrat", sans-serif;
   color: var(--text-white);
 }
 
@@ -96,13 +96,13 @@ body {
 /* Filter Bar */
 .filter-bar {
   background-color: var(--bg-card);
-  padding: 24px 30px;
+  padding: 16px 30px;
   margin: 30px 30px 0;
   display: flex;
-  gap: 20px;
+  gap: 16px;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   border: 1px solid var(--border-color);
   border-radius: 12px;
   box-shadow: 0 4px 16px var(--shadow-light);
@@ -110,60 +110,77 @@ body {
 
 .filter-controls {
   display: flex;
-  gap: 20px;
+  gap: 16px;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  flex: 0 1 auto;
 }
 
 .filter-group {
   display: flex;
   flex-direction: column;
+  position: relative;
+  padding-right: 16px;
+  border-right: 1px solid var(--border-color);
+}
+
+.filter-group:last-of-type {
+  border-right: none;
 }
 
 .filter-group select {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
+  background-color: transparent;
+  border: none;
   color: var(--text-primary);
-  padding: 8px 12px;
+  padding: 8px 28px 8px 0;
   font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
-  border-radius: 4px;
-  min-width: 120px;
+  transition: all 0.2s ease;
+  border-radius: 0;
+  min-width: auto;
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='%23666' d='M4.427 6.427 8 10l3.573-3.573-.707-.707L8 8.586 5.134 5.72z'/></svg>");
+  background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='%231e293b' d='M4.427 6.427 8 10l3.573-3.573-.707-.707L8 8.586 5.134 5.72z'/></svg>");
   background-repeat: no-repeat;
-  background-position: right 8px center;
+  background-position: right center;
   background-size: 16px;
-  padding-right: 32px;
+  box-shadow: none;
 }
 
-.filter-group select:hover,
-.filter-group select:focus {
-  border-color: var(--bg-secondary);
+.filter-group select:hover {
+  color: var(--text-secondary);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(45, 100, 112, 0.1);
+}
+
+.filter-group select:focus {
+  outline: none;
+  color: var(--text-primary);
 }
 
 .apply-filter-btn {
-  background-color: var(--text-primary);
+  background-color: #000000;
   color: var(--text-white);
   border: none;
-  padding: 10px 20px;
+  padding: 8px 20px;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 500;
-  transition: all 0.3s ease;
+  font-weight: 700;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 8px;
-  height: fit-content;
-  border-radius: 6px;
+  height: auto;
+  border-radius: 24px;
+  box-shadow: none;
+  white-space: nowrap;
 }
 
 .apply-filter-btn:hover {
-  background-color: var(--text-secondary);
-  transform: translateY(-1px);
+  background-color: #1e293b;
+}
+
+.apply-filter-btn i {
+  font-size: 12px;
 }
 
 /* KPI Cards */
@@ -280,7 +297,7 @@ body {
   margin: 0;
   margin-bottom: 20px;
   padding: 20px 24px;
-  font-family: "Inter", sans-serif;
+  font-family: "Montserrat", sans-serif;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
 }
@@ -326,7 +343,7 @@ body {
   background-color: var(--bg-secondary);
   margin: 0;
   padding: 20px 24px;
-  font-family: "Inter", sans-serif;
+  font-family: "Montserrat", sans-serif;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
 }
@@ -437,7 +454,7 @@ body {
   background-color: var(--bg-primary);
   font-weight: 600;
   color: var(--text-primary);
-  font-family: "Inter", sans-serif;
+  font-family: "Montserrat", sans-serif;
   cursor: pointer;
   user-select: none;
   transition: background-color 0.3s ease;
@@ -474,7 +491,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 180px;
   gap: 20px;
-  align-items: center;
+  align-items: start;
   width: 100%;
 }
 
@@ -497,7 +514,9 @@ body {
   padding-left: 20px;
   border-left: 1px solid var(--border-color);
   width: 100%;
-  align-self: stretch;
+  align-self: center;
+  justify-content: center;
+  height: 100%;
 }
 
 .legend-item {
