@@ -356,9 +356,6 @@ body {
   height: 180px;
   object-fit: cover;
   position: relative;
-  padding: 10px;
-  border-radius: 15px;
-  filter: blur(1px);
 }
 
 .facility-status-badge {
@@ -863,7 +860,7 @@ body {
   position: relative;
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  min-height: calc(100vh - 20rem);
 }
 
 .result-section.hidden,
@@ -882,12 +879,13 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 16px;
 }
 
 .detail-back-btn {
   position: absolute;
-  top: 2rem;
-  left: 2rem;
+  top: 1rem;
+  left: 1rem;
   background: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
@@ -1051,19 +1049,25 @@ body {
   display: none;
 }
 
-.complaint-header {
-  padding: 1rem 0rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: white;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+.complaint-hero {
+  position: relative;
+  width: 100%;
+  height: 40vh;
+  overflow: hidden;
+}
+
+.complaint-hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
 }
 
 .complaint-back-btn {
-  background: #1f2937;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
   width: 48px;
@@ -1074,60 +1078,52 @@ body {
   justify-content: center;
   cursor: pointer;
   transition: background 0.3s ease;
-  flex-shrink: 0;
+  z-index: 10;
 }
 
 .complaint-back-btn:hover {
-  background: #374151;
+  background: rgba(0, 0, 0, 0.7);
 }
 
 .complaint-back-btn i {
   font-size: 1.25rem;
 }
 
+.complaint-hero-overlay {
+  position: absolute;
+  right: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.3),
+    transparent
+  );
+  padding: 1rem;
+  color: white;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  width: calc(100% - 2rem);
+  left: 1rem;
+  bottom: 1rem;
+  border-radius: 10px;
+}
+
 .complaint-title {
   font-size: 1.75rem;
-  font-weight: 600;
-  color: #1f2937;
-  margin: 0;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
   font-family: "Montserrat", sans-serif;
-}
-
-.complaint-content {
-  padding: 0 0 8rem 0;
-}
-
-.complaint-facility-info {
-  margin-bottom: 1.5rem;
+  color: white;
 }
 
 .complaint-facility-id {
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: #1f2937;
-  margin: 0 0 0.5rem 0;
-  font-family: "Montserrat", sans-serif;
-}
-
-.complaint-subtitle {
   font-size: 1rem;
-  color: #6b7280;
+  color: rgba(255, 255, 255, 0.9);
   margin: 0;
 }
 
-.complaint-facility-image-container {
-  width: 100%;
-  margin-bottom: 2rem;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.complaint-facility-image {
-  width: 100%;
-  height: auto;
-  max-height: 300px;
-  object-fit: cover;
-  display: block;
+.complaint-content {
+  padding: 2rem 1rem 8rem 1rem;
 }
 
 .complaint-form {

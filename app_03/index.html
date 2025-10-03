@@ -152,23 +152,18 @@
 
         <!-- Complaint Form Section -->
         <div id="complaint-section" class="complaint-section hidden">
-          <div class="complaint-header">
+          <div class="complaint-hero">
+            <img id="complaint-hero-image" src="" alt="Facility" class="complaint-hero-image" />
             <button id="complaint-back-btn" class="complaint-back-btn">
               <i class="fas fa-chevron-left"></i>
             </button>
-            <h1 class="complaint-title">Write a complain</h1>
+            <div class="complaint-hero-overlay">
+              <h1 class="complaint-title">Write a complain</h1>
+              <p id="complaint-facility-id" class="complaint-facility-id"></p>
+            </div>
           </div>
 
           <div class="complaint-content">
-            <div class="complaint-facility-info">
-              <h2 id="complaint-facility-id" class="complaint-facility-id"></h2>
-              <p class="complaint-subtitle">Extract data points from registry</p>
-            </div>
-
-            <div class="complaint-facility-image-container">
-              <img id="complaint-facility-image" src="" alt="Facility" class="complaint-facility-image" />
-            </div>
-
             <form id="complaint-form" class="complaint-form">
               <div class="form-group">
                 <label class="form-label">Description <span class="required">*</span></label>

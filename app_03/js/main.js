@@ -1318,9 +1318,9 @@ $(document).ready(function() {
             imageUrl = '..' + facility.image;
         }
 
-        // Set facility info
+        // Set hero image and facility info
+        $("#complaint-hero-image").attr("src", imageUrl);
         $("#complaint-facility-id").text(facility.id);
-        $("#complaint-facility-image").attr("src", imageUrl);
 
         // Reset form
         $("#complaint-form")[0].reset();
