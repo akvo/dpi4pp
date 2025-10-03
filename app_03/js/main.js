@@ -1006,29 +1006,94 @@ $(document).ready(function() {
         try {
             let dataUrl;
             if (window.location.pathname.includes('/dpi4pp/')) {
-                dataUrl = "../api/source/liberia.json";
+                dataUrl = "../api/source/liberia-country.json";
             } else {
-                dataUrl = "/api/source/liberia.json";
+                dataUrl = "/api/source/liberia-country.json";
             }
 
             console.log("Loading Liberia boundaries from:", dataUrl);
-            const response = await axios.get(dataUrl);
-            const topoData = response.data;
+            const response = await fetch(dataUrl);
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const topojsonData = await response.json();
+
+            console.log('TopoJSON data structure:', {
+                type: topojsonData.type,
+                hasObjects: !!topojsonData.objects,
+                objectKeys: topojsonData.objects ? Object.keys(topojsonData.objects) : []
+            });
+
+            // Check if topojson is available
+            if (typeof topojson === 'undefined') {
+                throw new Error('topojson library not loaded');
+            }
+
+            // Check if objects exist
+            if (!topojsonData.objects) {
+                throw new Error('TopoJSON objects not found');
+            }
+
+            // Check if the specific object exists
+            const boundaryKey = "liberia-country";
+            if (!topojsonData.objects[boundaryKey]) {
+                console.error('Available objects:', Object.keys(topojsonData.objects));
+                throw new Error(`TopoJSON object "${boundaryKey}" not found`);
+            }
 
             // Convert TopoJSON to GeoJSON
-            const geoData = topojson.feature(topoData, topoData.objects.liberia);
+            const geoData = topojson.feature(
+                topojsonData,
+                topojsonData.objects[boundaryKey]
+            );
 
-            // Add to map with styling
+            // Create inverse mask - darken everything outside Liberia
+            // Get Liberia coordinates (first geometry)
+            const liberiaCoords = geoData.features[0].geometry.coordinates;
+
+            // Create a world-covering polygon with Liberia as a hole
+            const worldWithHole = {
+                type: "Feature",
+                properties: {},
+                geometry: {
+                    type: "Polygon",
+                    coordinates: [
+                        // Outer ring - covers the whole world
+                        [
+                            [-180, -90],
+                            [-180, 90],
+                            [180, 90],
+                            [180, -90],
+                            [-180, -90]
+                        ],
+                        // Inner ring - Liberia boundary (creates a hole)
+                        ...liberiaCoords
+                    ]
+                }
+            };
+
+            // Add dark overlay with Liberia cut out
+            L.geoJSON(worldWithHole, {
+                style: {
+                    fillColor: '#000000',
+                    fillOpacity: 0.4,
+                    stroke: false
+                },
+                interactive: false
+            }).addTo(facilitiesMap);
+
+            // Add Liberia outline on top (invisible, just for reference)
             liberiaLayer = L.geoJSON(geoData, {
                 style: {
-                    color: '#015ece',
-                    weight: 2,
-                    fillColor: '#e5f2ff',
-                    fillOpacity: 0.2
+                    stroke: false,
+                    fillColor: 'transparent',
+                    fillOpacity: 0
                 }
             }).addTo(facilitiesMap);
 
-            console.log("Liberia boundaries loaded successfully");
+            console.log("Liberia country outline loaded successfully with highlight");
         } catch (error) {
             console.error("Failed to load Liberia boundaries:", error);
         }
