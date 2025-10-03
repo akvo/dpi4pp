@@ -91,7 +91,6 @@ Multi-app dashboard system for Liberia education and WASH data management.
 - Integrated Leaflet.js and TopoJSON libraries into app_03
 - Created full-screen interactive map view showing all WASH facilities
 - Refactored search bar as reusable shared component for list and map views
-- Added Liberia TopoJSON boundaries with blue styling matching app_01/app_02
 - Implemented custom 32px teardrop pin markers with color-coding (green=functioning, red=not)
 - Designed sophisticated popup cards with facility images, compact layout, and circular action button
 - Map fills entire viewport edge-to-edge below header and above bottom nav
@@ -106,6 +105,13 @@ Multi-app dashboard system for Liberia education and WASH data management.
 - Added box shadow to top header for visual depth
 - Reduced splash logo animation size from 280px to 200px
 - Updated search placeholder to "Search facilities..." for clarity
+- Fixed splash background blur overflow with negative margins
+- Added liberia-country.json for clean country outline visualization
+- Implemented inverse mask effect darkening areas outside Liberia (40% opacity)
+- Borderless country highlight creates spotlight effect on target area
+- Fixed TopoJSON loading with topojson-client@3.1.0 library
+- Redesigned complaint page with hero image matching detail page layout
+- Fixed grammar throughout: "complain" → "complaint"
 
 ## Key Technical Stack
 - **Frontend**: Vanilla JS with jQuery (all apps)
