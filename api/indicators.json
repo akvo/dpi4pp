@@ -1,0 +1,82 @@
+{
+  "Borehole": {
+    "type": {
+      "source": "National WASH commission"
+    },
+    "location": {
+      "source": "National WASH commission"
+    },
+    "functionality": {
+      "source": "National WASH commission"
+    },
+    "jmpStatus": {
+      "source": "Ministry of Health"
+    },
+    "lastService": {
+      "source": "Liberia Water and Sewer Corporation (LWSC)"
+    },
+    "nextService": {
+      "source": "Liberia Water and Sewer Corporation (LWSC)"
+    },
+    "depth": {
+      "source": "National WASH commission"
+    },
+    "pumpType": {
+      "source": "National WASH commission"
+    },
+    "flowRate": {
+      "source": "Liberia Water and Sewer Corporation (LWSC)"
+    },
+    "waterQuality": {
+      "subIndicators": {
+        "pH": {
+          "source": "Ministry of Health"
+        },
+        "turbidity": {
+          "source": "Ministry of Health"
+        },
+        "lastTest": {
+          "source": "Ministry of Health"
+        },
+        "safe": {
+          "source": "Ministry of Health"
+        }
+      }
+    },
+    "contractor": {
+      "source": "Liberia Water and Sewer Corporation (LWSC)"
+    }
+  },
+  "Hand Pump": {
+    "type": {
+      "source": "National WASH commission"
+    },
+    "location": {
+      "source": "National WASH commission"
+    },
+    "functionality": {
+      "source": "National WASH commission"
+    },
+    "jmpStatus": {
+      "source": "Ministry of Health"
+    },
+    "lastService": {
+      "source": "Liberia Water and Sewer Corporation (LWSC)"
+    },
+    "nextService": {
+      "source": "Liberia Water and Sewer Corporation (LWSC)"
+    },
+    "pumpModel": {
+      "source": "National WASH commission"
+    },
+    "installationYear": {
+      "source": "Liberia Water and Sewer Corporation (LWSC)"
+    },
+    "sparePartsAvailable": {
+      "source": "Liberia Water and Sewer Corporation (LWSC)"
+    },
+    "technician": {
+      "source": "Liberia Water and Sewer Corporation (LWSC)"
+    }
+  }
+}

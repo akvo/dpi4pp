@@ -2,6 +2,7 @@ $(document).ready(function () {
     // Load school and facility data
     let schoolsData = [];
     let facilitiesData = [];
+    let indicatorsData = {}; // Store indicators mapping
     let loadedSchools = new Set(); // Track schools that have loaded their facilities
     let enrollmentChart = null; // Store chart instance
     let schoolMap = null; // Store map instance
@@ -60,6 +61,40 @@ $(document).ready(function () {
         }
     }
 
+    async function loadIndicatorsData() {
+        try {
+            console.log("Attempting to load indicators mapping...");
+
+            const indicatorsResponse = await axios.get("../api/indicators.json");
+            indicatorsData = indicatorsResponse.data;
+            console.log("Indicators data loaded successfully:", indicatorsData);
+
+            return indicatorsData;
+        } catch (error) {
+            console.log("Failed to load indicators data:", error.message);
+            return {};
+        }
+    }
+
+    // Helper function to get source for an indicator
+    function getIndicatorSource(facilityType, indicatorKey, subKey = null) {
+        if (!indicatorsData[facilityType]) {
+            return "Unknown";
+        }
+
+        const typeMapping = indicatorsData[facilityType];
+
+        // Handle nested indicators (e.g., waterQuality.pH)
+        if (subKey && typeMapping[indicatorKey] && typeMapping[indicatorKey].subIndicators) {
+            const subIndicator = typeMapping[indicatorKey].subIndicators[subKey];
+            return subIndicator ? subIndicator.source : "Unknown";
+        }
+
+        // Handle direct indicators
+        const indicator = typeMapping[indicatorKey];
+        return indicator ? indicator.source : "Unknown";
+    }
+
     function renderSchoolsTable() {
         console.log("Rendering schools table with data:", schoolsData);
 
@@ -109,6 +144,7 @@ $(document).ready(function () {
                                             <tr>
                                                 <th>Indicator</th>
                                                 <th>Value</th>
+                                                <th>Source</th>
                                             </tr>
                                         </thead>
                                         <tbody id="facility-tbody-${index}-${fIndex}">
@@ -197,34 +233,39 @@ $(document).ready(function () {
 
             // Add facility details as rows
             const details = [
-                { indicator: "Type", value: facility.type || "N/A" },
-                { indicator: "Location", value: facility.location || "N/A" },
+                { indicator: "Type", value: facility.type || "N/A", key: "type" },
+                { indicator: "Location", value: facility.location || "N/A", key: "location" },
                 {
                     indicator: "Functionality",
                     value: `<span class="status-badge ${facility.functionality === "Functioning" ? "active" : "pending"}">${facility.functionality}</span>`,
+                    key: "functionality"
                 },
-                { indicator: "JMP Status", value: facility.jmpStatus || "N/A" },
+                { indicator: "JMP Status", value: facility.jmpStatus || "N/A", key: "jmpStatus" },
                 {
                     indicator: "Last Service",
                     value: facility.lastService || "N/A",
+                    key: "lastService"
                 },
                 {
                     indicator: "Next Service",
                     value: facility.nextService || "N/A",
+                    key: "nextService"
                 },
             ];
 
             // Add specific details based on facility type
             if (facility.type === "Borehole") {
                 details.push(
-                    { indicator: "Depth", value: facility.depth || "N/A" },
+                    { indicator: "Depth", value: facility.depth || "N/A", key: "depth" },
                     {
                         indicator: "Pump Type",
                         value: facility.pumpType || "N/A",
+                        key: "pumpType"
                     },
                     {
                         indicator: "Flow Rate",
                         value: facility.flowRate || "N/A",
+                        key: "flowRate"
                     },
                 );
                 if (facility.waterQuality) {
@@ -232,14 +273,20 @@ $(document).ready(function () {
                         {
                             indicator: "Water pH",
                             value: facility.waterQuality.pH || "N/A",
+                            key: "waterQuality",
+                            subKey: "pH"
                         },
                         {
                             indicator: "Turbidity",
                             value: facility.waterQuality.turbidity || "N/A",
+                            key: "waterQuality",
+                            subKey: "turbidity"
                         },
                         {
                             indicator: "Water Safe",
                             value: facility.waterQuality.safe ? "Yes" : "No",
+                            key: "waterQuality",
+                            subKey: "safe"
                         },
                     );
                 }
@@ -248,14 +295,17 @@ $(document).ready(function () {
                     {
                         indicator: "Pump Model",
                         value: facility.pumpModel || "N/A",
+                        key: "pumpModel"
                     },
                     {
                         indicator: "Installation Year",
                         value: facility.installationYear || "N/A",
+                        key: "installationYear"
                     },
                     {
                         indicator: "Spare Parts Available",
                         value: facility.sparePartsAvailable ? "Yes" : "No",
+                        key: "sparePartsAvailable"
                     },
                 );
             } else if (facility.type === "Storage Tank") {
@@ -263,14 +313,17 @@ $(document).ready(function () {
                     {
                         indicator: "Capacity",
                         value: facility.capacity || "N/A",
+                        key: "capacity"
                     },
                     {
                         indicator: "Material",
                         value: facility.material || "N/A",
+                        key: "material"
                     },
                     {
                         indicator: "Installation Year",
                         value: facility.installationYear || "N/A",
+                        key: "installationYear"
                     },
                 );
             } else if (facility.type === "Solar Pump") {
@@ -278,14 +331,17 @@ $(document).ready(function () {
                     {
                         indicator: "Panel Capacity",
                         value: facility.panelCapacity || "N/A",
+                        key: "panelCapacity"
                     },
                     {
                         indicator: "Battery Backup",
                         value: facility.batteryBackup ? "Yes" : "No",
+                        key: "batteryBackup"
                     },
                     {
                         indicator: "Flow Rate",
                         value: facility.flowRate || "N/A",
+                        key: "flowRate"
                     },
                 );
             } else if (facility.type === "Rainwater System") {
@@ -293,25 +349,29 @@ $(document).ready(function () {
                     {
                         indicator: "Roof Area",
                         value: facility.roofArea || "N/A",
+                        key: "roofArea"
                     },
                     {
                         indicator: "Tank Capacity",
                         value: facility.tankCapacity || "N/A",
+                        key: "tankCapacity"
                     },
                     {
                         indicator: "First Flush",
                         value: facility.firstFlush ? "Yes" : "No",
+                        key: "firstFlush"
                     },
                     {
                         indicator: "Filtration",
                         value: facility.filtration ? "Yes" : "No",
+                        key: "filtration"
                     },
                 );
             } else if (facility.type === "Dug Well") {
                 details.push(
-                    { indicator: "Depth", value: facility.depth || "N/A" },
-                    { indicator: "Lining", value: facility.lining || "N/A" },
-                    { indicator: "Cover", value: facility.cover || "N/A" },
+                    { indicator: "Depth", value: facility.depth || "N/A", key: "depth" },
+                    { indicator: "Lining", value: facility.lining || "N/A", key: "lining" },
+                    { indicator: "Cover", value: facility.cover || "N/A", key: "cover" },
                 );
             }
 
@@ -320,33 +380,38 @@ $(document).ready(function () {
                 details.push({
                     indicator: "Contractor",
                     value: facility.contractor,
+                    key: "contractor"
                 });
             }
             if (facility.technician) {
                 details.push({
                     indicator: "Technician",
                     value: facility.technician,
+                    key: "technician"
                 });
             }
             if (facility.submittedBy) {
                 details.push({
                     indicator: "Data Source",
                     value: facility.submittedBy,
+                    key: "submittedBy"
                 });
             }
 
             // Render the details
             details.forEach((detail) => {
+                const source = getIndicatorSource(facility.type, detail.key, detail.subKey);
                 tbody.append(`
                     <tr>
                         <td>${detail.indicator}</td>
                         <td>${detail.value}</td>
+                        <td>${source}</td>
                     </tr>
                 `);
             });
         } else {
             tbody.html(
-                '<tr><td colspan="2" style="text-align: center;">Facility data not found</td></tr>',
+                '<tr><td colspan="3" style="text-align: center;">Facility data not found</td></tr>',
             );
         }
 
@@ -882,13 +947,16 @@ $(document).ready(function () {
     // Initialize dashboard
     initializeDashboard();
 
-    // Load only schools data initially - facilities data will be loaded on demand
-    loadSchoolsData()
+    // Load schools data and indicators mapping
+    Promise.all([
+        loadSchoolsData(),
+        loadIndicatorsData()
+    ])
         .then(() => {
-            console.log("Schools data loading completed");
+            console.log("Schools data and indicators loading completed");
         })
         .catch((error) => {
-            console.error("Schools data loading failed:", error);
+            console.error("Data loading failed:", error);
         });
 
     console.log("App 01 Dashboard initialized");

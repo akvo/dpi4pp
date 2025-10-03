@@ -1,0 +1,25 @@
+Type	Indicator	sub indicator	Source
+Borehole	type		National WASH commission
+Borehole	location		National WASH commission
+Borehole	functionality		National WASH commission
+Borehole	jmpStatus		Ministry of Health
+Borehole	lastService		Liberia Water and Sewer Corporation (LWSC)
+Borehole	nextService		Liberia Water and Sewer Corporation (LWSC)
+Borehole	depth		National WASH commission
+Borehole	pumpType		National WASH commission
+Borehole	flowRate		Liberia Water and Sewer Corporation (LWSC)
+Borehole	waterQuality	pH	Ministry of Health
+Borehole	waterQuality	turbidity	Ministry of Health
+Borehole	waterQuality	lastTest	Ministry of Health
+Borehole	waterQuality	safe	Ministry of Health
+Borehole	contractor		Liberia Water and Sewer Corporation (LWSC)
+Hand Pump	type		National WASH commission
+Hand Pump	location		National WASH commission
+Hand Pump	functionality		National WASH commission
+Hand Pump	jmpStatus		Ministry of Health
+Hand Pump	lastService		Liberia Water and Sewer Corporation (LWSC)
+Hand Pump	nextService		Liberia Water and Sewer Corporation (LWSC)
+Hand Pump	pumpModel		National WASH commission
+Hand Pump	installationYear		Liberia Water and Sewer Corporation (LWSC)
+Hand Pump	sparePartsAvailable		Liberia Water and Sewer Corporation (LWSC)
+Hand Pump	technician		Liberia Water and Sewer Corporation (LWSC)
