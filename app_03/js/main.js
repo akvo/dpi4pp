@@ -2,6 +2,9 @@ $(document).ready(function() {
     let html5QrCode = null;
     let isScanning = false;
     let dpiData = [];
+    let facilitiesMap = null;
+    let mapMarkers = [];
+    let liberiaLayer = null;
 
     // Check if required libraries are loaded
     function checkLibraries() {
@@ -113,6 +116,9 @@ $(document).ready(function() {
 
             // Load facilities list after data is loaded
             loadFacilitiesList();
+
+            // Show search bar for list view
+            $("#shared-search").removeClass("hidden");
         } catch (error) {
             console.error("Failed to load DPI data:", error);
             console.error("Error details:", error.response?.status, error.response?.statusText);
@@ -378,6 +384,9 @@ $(document).ready(function() {
         // Always show scanner icon when on detail page
         $("#center-icon").removeClass("fa-search").addClass("fa-qrcode");
 
+        // Hide search bar on detail page
+        $("#shared-search").addClass("hidden");
+
         // Get image URL
         let imageUrl = facility.image || `https://placehold.co/400x300/e5e7eb/6b7280?text=${encodeURIComponent(facility.type)}`;
         if (facility.image && facility.image.startsWith('/api/')) {
@@ -409,6 +418,7 @@ $(document).ready(function() {
         $("#error-section").addClass("hidden");
         $("#scanner-view").addClass("hidden");
         $("#facilities-list").addClass("hidden");
+        $("#map-view").addClass("hidden");
     }
 
     // Generate facility description
@@ -785,6 +795,8 @@ $(document).ready(function() {
         $("#scanner-view").addClass("hidden");
         $("#complaint-section").addClass("hidden");
         $("#facilities-list").addClass("hidden");
+        $("#map-view").addClass("hidden");
+        $("#shared-search").addClass("hidden");
     }
 
 
@@ -796,26 +808,63 @@ $(document).ready(function() {
     };
 
     // View toggle state
-    let currentView = 'list'; // 'list', 'scanner', or 'detail'
+    let currentView = 'list'; // 'list', 'map', 'scanner', or 'detail'
+
+    // Clear search input
+    function clearSearch() {
+        $("#header-search-input").val('');
+        // Reset all facilities to visible
+        $(".facility-card").show();
+        // Reset all markers to full opacity
+        mapMarkers.forEach(marker => {
+            marker.setOpacity(1);
+        });
+    }
 
     // Toggle between list and scanner view
     function toggleView() {
         const listView = $("#facilities-list");
+        const mapView = $("#map-view");
         const scannerView = $("#scanner-view");
         const resultSection = $("#result-section");
         const errorSection = $("#error-section");
         const complaintSection = $("#complaint-section");
         const centerIcon = $("#center-icon");
+        const sharedSearch = $("#shared-search");
+
+        // Clear search when changing views
+        clearSearch();
 
         if (currentView === 'list') {
             // Switch to scanner view
+            listView.addClass("hidden");
+            mapView.addClass("hidden");
+            scannerView.removeClass("hidden");
+            resultSection.addClass("hidden");
+            errorSection.addClass("hidden");
+            complaintSection.addClass("hidden");
+            sharedSearch.addClass("hidden");
+            centerIcon.removeClass("fa-qrcode").addClass("fa-search");
+            currentView = 'scanner';
+            // Clear nav highlighting
+            $(".nav-item").removeClass("active");
+            // Reset scanner title
+            $(".scanner-title").text("Scan a facility").css("color", "#1f2937");
+            // Auto-start scanning
+            setTimeout(() => startScanning(), 300);
+        } else if (currentView === 'map') {
+            // Switch to scanner view from map
+            mapView.addClass("hidden");
             listView.addClass("hidden");
             scannerView.removeClass("hidden");
             resultSection.addClass("hidden");
             errorSection.addClass("hidden");
             complaintSection.addClass("hidden");
+            sharedSearch.addClass("hidden");
             centerIcon.removeClass("fa-qrcode").addClass("fa-search");
             currentView = 'scanner';
+            // Clear nav highlighting
+            $(".nav-item").removeClass("active");
             // Reset scanner title
             $(".scanner-title").text("Scan a facility").css("color", "#1f2937");
             // Auto-start scanning
@@ -826,9 +875,13 @@ $(document).ready(function() {
             resultSection.addClass("hidden");
             errorSection.addClass("hidden");
             complaintSection.addClass("hidden");
+            mapView.addClass("hidden");
             listView.removeClass("hidden");
+            sharedSearch.removeClass("hidden");
             centerIcon.removeClass("fa-search").addClass("fa-qrcode");
             currentView = 'list';
+            // Clear nav highlighting for list view
+            $(".nav-item").removeClass("active");
             // Stop scanning if active
             if (isScanning) {
                 stopScanning();
@@ -839,9 +892,13 @@ $(document).ready(function() {
             errorSection.addClass("hidden");
             complaintSection.addClass("hidden");
             listView.addClass("hidden");
+            mapView.addClass("hidden");
             scannerView.removeClass("hidden");
+            sharedSearch.addClass("hidden");
             centerIcon.removeClass("fa-qrcode").addClass("fa-search");
             currentView = 'scanner';
+            // Clear nav highlighting
+            $(".nav-item").removeClass("active");
 
             // Reset scanner title
             $(".scanner-title").text("Scan a facility").css("color", "#1f2937");
@@ -915,19 +972,204 @@ $(document).ready(function() {
         });
     }
 
+    // Initialize map
+    function initializeMap() {
+        if (facilitiesMap) {
+            return; // Already initialized
+        }
+
+        console.log("Initializing map...");
+
+        // Create map centered on Liberia
+        facilitiesMap = L.map('facilities-map', {
+            scrollWheelZoom: false,
+            zoomControl: false
+        }).setView([6.4281, -9.4295], 8);
+
+        // Add tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18
+        }).addTo(facilitiesMap);
+
+        // Load Liberia boundaries
+        loadLiberiaBoundaries();
+
+        // Add facility markers
+        addFacilityMarkers();
+
+        console.log("Map initialized successfully");
+    }
+
+    // Load Liberia boundaries
+    async function loadLiberiaBoundaries() {
+        try {
+            let dataUrl;
+            if (window.location.pathname.includes('/dpi4pp/')) {
+                dataUrl = "../api/source/liberia.json";
+            } else {
+                dataUrl = "/api/source/liberia.json";
+            }
+
+            console.log("Loading Liberia boundaries from:", dataUrl);
+            const response = await axios.get(dataUrl);
+            const topoData = response.data;
+
+            // Convert TopoJSON to GeoJSON
+            const geoData = topojson.feature(topoData, topoData.objects.liberia);
+
+            // Add to map with styling
+            liberiaLayer = L.geoJSON(geoData, {
+                style: {
+                    color: '#015ece',
+                    weight: 2,
+                    fillColor: '#e5f2ff',
+                    fillOpacity: 0.2
+                }
+            }).addTo(facilitiesMap);
+
+            console.log("Liberia boundaries loaded successfully");
+        } catch (error) {
+            console.error("Failed to load Liberia boundaries:", error);
+        }
+    }
+
+    // Add facility markers to map
+    function addFacilityMarkers() {
+        if (!facilitiesMap || !dpiData || dpiData.length === 0) {
+            console.error("Cannot add markers: map or data not available");
+            return;
+        }
+
+        // Clear existing markers
+        mapMarkers.forEach(marker => marker.remove());
+        mapMarkers = [];
+
+        console.log("Adding facility markers to map...");
+
+        // Get unique facilities
+        const uniqueFacilities = {};
+        dpiData.forEach(facility => {
+            if (!uniqueFacilities[facility.id]) {
+                uniqueFacilities[facility.id] = facility;
+            }
+        });
+
+        // Create markers for each facility
+        Object.values(uniqueFacilities).forEach(facility => {
+            if (facility.coordinates && facility.coordinates.latitude && facility.coordinates.longitude) {
+                const statusClass = facility.functionality === "Functioning" ? "functioning" : "not-functioning";
+                const statusText = facility.functionality === "Functioning" ? "Functioning" : "No function";
+
+                // Create custom icon based on status
+                const iconColor = facility.functionality === "Functioning" ? '#10b981' : '#ef4444';
+                const customIcon = L.divIcon({
+                    html: `
+                        <div style="
+                            position: relative;
+                            width: 32px;
+                            height: 32px;
+                            background: ${iconColor};
+                            border-radius: 50% 50% 50% 0;
+                            transform: rotate(-45deg);
+                            border: 3px solid white;
+                            box-shadow: 0 3px 12px rgba(0,0,0,0.4);
+                        ">
+                            <div style="
+                                position: absolute;
+                                width: 14px;
+                                height: 14px;
+                                background: white;
+                                border-radius: 50%;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                            "></div>
+                        </div>
+                    `,
+                    className: 'custom-marker',
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 32],
+                    popupAnchor: [0, -32]
+                });
+
+                // Create marker
+                const marker = L.marker(
+                    [facility.coordinates.latitude, facility.coordinates.longitude],
+                    { icon: customIcon }
+                ).addTo(facilitiesMap);
+
+                // Get image URL
+                let imageUrl = facility.image || `https://placehold.co/400x300/e5e7eb/6b7280?text=${encodeURIComponent(facility.type)}`;
+                if (facility.image && facility.image.startsWith('/api/')) {
+                    imageUrl = '..' + facility.image;
+                }
+
+                // Create popup content
+                const popupContent = `
+                    <div class="map-popup-content">
+                        <div class="map-popup-image" style="background-image: url('${imageUrl}')"></div>
+                        <div class="map-popup-body">
+                            <div class="map-popup-header">
+                                <h3 class="map-popup-title">${facility.type}</h3>
+                                <span class="map-popup-id">${facility.id}</span>
+                            </div>
+                            <div class="map-popup-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${facility.location}</span>
+                            </div>
+                            <div class="map-popup-footer">
+                                <span class="map-popup-status ${statusClass}">${statusText}</span>
+                                <button class="map-popup-view-btn" onclick="window.viewFacilityFromMap('${facility.id}')">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                marker.bindPopup(popupContent);
+                mapMarkers.push(marker);
+            }
+        });
+
+        console.log(`Added ${mapMarkers.length} markers to map`);
+    }
+
+    // Global function to view facility from map popup
+    window.viewFacilityFromMap = function(facilityId) {
+        lookupDpiId(facilityId);
+    };
+
     // Search facilities (header search)
     $("#header-search-input").on("input", function() {
         const searchTerm = $(this).val().toLowerCase();
-        $(".facility-card").each(function() {
-            const facilityName = $(this).find(".facility-name").text().toLowerCase();
-            const facilityLocation = $(this).find(".facility-location").text().toLowerCase();
 
-            if (facilityName.includes(searchTerm) || facilityLocation.includes(searchTerm)) {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
-        });
+        if (currentView === 'list') {
+            // Search in list view
+            $(".facility-card").each(function() {
+                const facilityName = $(this).find(".facility-name").text().toLowerCase();
+                const facilityLocation = $(this).find(".facility-location").text().toLowerCase();
+
+                if (facilityName.includes(searchTerm) || facilityLocation.includes(searchTerm)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        } else if (currentView === 'map') {
+            // Search in map view - filter markers
+            mapMarkers.forEach(marker => {
+                const popup = marker.getPopup();
+                const popupContent = popup.getContent().toLowerCase();
+
+                if (popupContent.includes(searchTerm)) {
+                    marker.setOpacity(1);
+                } else {
+                    marker.setOpacity(0.2);
+                }
+            });
+        }
     });
 
     // Event Listeners
@@ -985,31 +1227,65 @@ $(document).ready(function() {
         }
     });
 
-    // Navigate to records/detail view (first nav icon)
+    // Navigate to map view (first nav icon)
     $("#nav-records").click(function() {
-        // Only navigate if we're not already on detail view or if result section is hidden
-        if (currentView !== 'detail' || $("#result-section").hasClass("hidden")) {
-            // Show the facilities list as the "records" view
-            $("#facilities-list").removeClass("hidden");
-            $("#scanner-view").addClass("hidden");
-            $("#result-section").addClass("hidden");
-            $("#error-section").addClass("hidden");
-            $("#complaint-section").addClass("hidden");
-            $("#center-icon").removeClass("fa-search").addClass("fa-qrcode");
-            currentView = 'list';
-            if (isScanning) {
-                stopScanning();
-            }
+        // Clear search when navigating
+        clearSearch();
+
+        // Show the map view
+        $("#map-view").removeClass("hidden");
+        $("#facilities-list").addClass("hidden");
+        $("#scanner-view").addClass("hidden");
+        $("#result-section").addClass("hidden");
+        $("#error-section").addClass("hidden");
+        $("#complaint-section").addClass("hidden");
+        $("#shared-search").removeClass("hidden");
+        $("#center-icon").removeClass("fa-search").addClass("fa-qrcode");
+        currentView = 'map';
+
+        // Update nav highlighting
+        $(".nav-item").removeClass("active");
+        $("#nav-records").addClass("active");
+
+        if (isScanning) {
+            stopScanning();
+        }
+
+        // Initialize map if needed
+        if (!facilitiesMap) {
+            setTimeout(() => {
+                initializeMap();
+            }, 100);
+        } else {
+            // Invalidate size to fix display issues
+            setTimeout(() => {
+                facilitiesMap.invalidateSize();
+            }, 100);
         }
     });
 
     // Detail page back button
     $("#detail-back-btn").click(function() {
+        // Clear search when navigating back
+        clearSearch();
+
         $("#result-section").addClass("hidden");
         $("#complaint-section").addClass("hidden");
-        $("#facilities-list").removeClass("hidden");
+        $("#map-view").removeClass("hidden");
+        $("#shared-search").removeClass("hidden");
         $("#center-icon").removeClass("fa-search").addClass("fa-qrcode");
-        currentView = 'list';
+        currentView = 'map';
+
+        // Update nav highlighting
+        $(".nav-item").removeClass("active");
+        $("#nav-records").addClass("active");
+
+        // Invalidate map size
+        if (facilitiesMap) {
+            setTimeout(() => {
+                facilitiesMap.invalidateSize();
+            }, 100);
+        }
     });
 
     // Close modal when clicking outside
@@ -1056,13 +1332,19 @@ $(document).ready(function() {
         $("#facilities-list").addClass("hidden");
         $("#scanner-view").addClass("hidden");
         $("#error-section").addClass("hidden");
+        $("#map-view").addClass("hidden");
+        $("#shared-search").addClass("hidden");
         $("#complaint-section").removeClass("hidden");
     }
 
     // Complaint back button
     $("#complaint-back-btn").click(function() {
+        // Clear search when navigating back
+        clearSearch();
+
         $("#complaint-section").addClass("hidden");
         $("#result-section").removeClass("hidden");
+        $("#shared-search").addClass("hidden");
         currentView = 'detail';
     });
 

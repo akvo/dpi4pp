@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/app_03/" />
     <title>DPI Barcode Scanner</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,6 +23,8 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/topojson@3.0.2/dist/topojson.min.js"></script>
   </head>
   <body>
     <!-- Splash Screen -->
@@ -43,21 +49,27 @@
         </div>
       </header>
 
+      <!-- Shared Search Bar -->
+      <div id="shared-search" class="header-search hidden">
+        <i class="fas fa-search"></i>
+        <input type="text" id="header-search-input" placeholder="Search facilities..." />
+        <button class="header-filter-btn">
+          <i class="fas fa-sliders-h"></i>
+        </button>
+      </div>
+
       <!-- Scanner Section -->
       <main class="scanner-main">
         <!-- WASH Facilities List View -->
         <div id="facilities-list" class="facilities-list-section">
-          <div class="header-search">
-            <i class="fas fa-search"></i>
-            <input type="text" id="header-search-input" placeholder="Search by place..." />
-            <button class="header-filter-btn">
-              <i class="fas fa-sliders-h"></i>
-            </button>
-          </div>
-
           <div id="facilities-container" class="facilities-container">
             <!-- Facilities will be loaded here -->
           </div>
+        </div>
+
+        <!-- Map View -->
+        <div id="map-view" class="map-view-section hidden">
+          <div id="facilities-map" class="facilities-map"></div>
         </div>
 
         <!-- Scanner View -->
