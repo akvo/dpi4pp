@@ -36,24 +36,34 @@
     </div>
 
     <div class="scanner-container">
-      <!-- Header -->
-      <header class="scanner-header">
-        <div class="header-content">
-          <div class="logo">
-            <i class="fas fa-barcode"></i>
-            <h1>DPI Scanner</h1>
-          </div>
-          <div class="scan-status">
-            <span id="status-indicator" class="status-indicator inactive">
-              <i class="fas fa-circle"></i> Ready to Scan
-            </span>
-          </div>
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-logo">
+          <img src="images/dpi4pp-header-logo.png" alt="DPI4PP Logo" />
         </div>
       </header>
 
       <!-- Scanner Section -->
       <main class="scanner-main">
-        <div class="scanner-section">
+        <!-- WASH Facilities List View -->
+        <div id="facilities-list" class="facilities-list-section">
+          <div class="header-search">
+            <i class="fas fa-search"></i>
+            <input type="text" id="header-search-input" placeholder="Search by place..." />
+            <button class="header-filter-btn">
+              <i class="fas fa-sliders-h"></i>
+            </button>
+          </div>
+
+          <div id="facilities-container" class="facilities-container">
+            <!-- Facilities will be loaded here -->
+          </div>
+        </div>
+
+        <!-- Scanner View -->
+        <div id="scanner-view" class="scanner-section hidden">
+          <h1 class="scanner-title">Scan a facility</h1>
+
           <div class="scanner-wrapper">
             <div id="qr-reader" class="qr-reader"></div>
             <div class="scanner-overlay">
@@ -61,13 +71,13 @@
             </div>
           </div>
 
+          <div class="scan-status">
+            <span id="status-indicator" class="status-indicator inactive">
+              <i class="fas fa-circle"></i> Ready to Scan
+            </span>
+          </div>
+
           <div class="scanner-controls">
-            <button id="start-scan" class="scan-btn active">
-              <i class="fas fa-camera"></i> Start Scanning
-            </button>
-            <button id="stop-scan" class="scan-btn" disabled>
-              <i class="fas fa-stop"></i> Stop Scanning
-            </button>
             <button id="manual-input" class="manual-btn">
               <i class="fas fa-keyboard"></i> Manual Input
             </button>
@@ -100,9 +110,6 @@
         <!-- Result Section -->
         <div id="result-section" class="result-section hidden">
           <div class="result-header">
-            <button id="back-btn" class="back-btn">
-              <i class="fas fa-arrow-left"></i> Back
-            </button>
             <h2>DPI Facility Information</h2>
           </div>
 
@@ -117,12 +124,30 @@
             <i class="fas fa-exclamation-triangle"></i>
             <h3>Facility Not Found</h3>
             <p id="error-message">The DPI ID was not found in the database.</p>
-            <button id="back-to-scan" class="back-btn">
-              <i class="fas fa-arrow-left"></i> Back to Scanner
-            </button>
           </div>
         </div>
       </main>
+
+      <!-- Bottom Navigation -->
+      <nav class="bottom-nav">
+        <button class="nav-item" id="nav-records">
+          <i class="fas fa-map-marked-alt"></i>
+        </button>
+        <button class="nav-item">
+          <i class="fas fa-clock"></i>
+        </button>
+        <button class="nav-item scanner-nav" id="toggle-view">
+          <div class="scanner-circle">
+            <i id="center-icon" class="fas fa-qrcode"></i>
+          </div>
+        </button>
+        <button class="nav-item">
+          <i class="fas fa-chart-bar"></i>
+        </button>
+        <button class="nav-item">
+          <i class="fas fa-user"></i>
+        </button>
+      </nav>
     </div>
 
     <script src="js/main.js"></script>

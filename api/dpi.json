@@ -23,7 +23,8 @@
       "longitude": -10.7603
     },
     "contractor": "AquaDrill Liberia Ltd.",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/water-pump.jpg"
   },
   {
     "id": "HP-2024-015",
@@ -43,7 +44,8 @@
       "longitude": -10.7602
     },
     "technician": "Water Mission Liberia",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/hand-pump.jpg"
   },
   {
     "id": "WT-2024-008",
@@ -64,7 +66,8 @@
       "longitude": -10.7604
     },
     "supplier": "Liberia Water Solutions",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/storage-tank.jpg"
   },
   {
     "id": "RH-2024-003",
@@ -85,7 +88,8 @@
       "longitude": -10.7605
     },
     "installer": "EcoWater Liberia",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/rain-water-system.JPG"
   },
   {
     "id": "BH-2024-045",
@@ -111,7 +115,8 @@
       "longitude": -9.9259
     },
     "contractor": "DrillWell Liberia Inc.",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/water-pump-2.jpg"
   },
   {
     "id": "HP-2024-089",
@@ -131,7 +136,8 @@
       "longitude": -9.9258
     },
     "technician": "WaterAid Liberia",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/hand-pump.jpg"
   },
   {
     "id": "SP-2024-012",
@@ -152,7 +158,8 @@
       "longitude": -9.9260
     },
     "supplier": "Solar Solutions Liberia",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/solar-pump.jpg"
   },
   {
     "id": "HP-2024-156",
@@ -172,7 +179,8 @@
       "longitude": -9.4693
     },
     "technician": "Liberia Water and Sewer Corporation",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/hand-pump.jpg"
   },
   {
     "id": "WL-2024-078",
@@ -193,7 +201,8 @@
       "longitude": -9.4692
     },
     "lastInspector": "Ministry of Health",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/water-pump-3.jpg"
   },
   {
     "id": "BH-2024-023",
@@ -219,7 +228,8 @@
       "longitude": -7.7182
     },
     "contractor": "Deep Water Drilling Co.",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/water-pump.jpg"
   },
   {
     "id": "HP-2024-087",
@@ -239,7 +249,8 @@
       "longitude": -7.7181
     },
     "technician": "Water Mission Liberia",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/hand-pump.jpg"
   },
   {
     "id": "WT-2024-045",
@@ -259,7 +270,8 @@
       "longitude": -7.7183
     },
     "supplier": "Steel Tanks Liberia",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/water-tank.jpg"
   },
   {
     "id": "HP-2024-023",
@@ -279,7 +291,8 @@
       "longitude": -8.4211
     },
     "technician": "Liberia Water and Sewer Corporation",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/hand-pump.jpg"
   },
   {
     "id": "RH-2024-015",
@@ -300,7 +313,8 @@
       "longitude": -8.4212
     },
     "installer": "Community Water Project",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/rain-water-system.JPG"
   },
   {
     "id": "BH-2024-001",
@@ -328,7 +342,8 @@
       "longitude": -10.7603
     },
     "healthInspector": "Dr. Sarah Johnson",
-    "submittedBy": "Ministry of Health"
+    "submittedBy": "Ministry of Health",
+    "image": "/api/images/water-pump.jpg"
   },
   {
     "id": "HP-2024-015",
@@ -355,7 +370,8 @@
       "eColi": "Absent"
     },
     "healthOfficer": "James Smith",
-    "submittedBy": "Ministry of Health"
+    "submittedBy": "Ministry of Health",
+    "image": "/api/images/hand-pump.jpg"
   },
   {
     "id": "WT-2024-008",
@@ -376,7 +392,8 @@
     },
     "structuralIntegrity": "Good",
     "lastInspection": "2024-08-25",
-    "submittedBy": "Ministry of Public Works"
+    "submittedBy": "Ministry of Public Works",
+    "image": "/api/images/storage-tank-2.jpg"
   },
   {
     "id": "BH-2024-045",
@@ -402,7 +419,8 @@
       "longitude": -9.9259
     },
     "issues": "Intermittent power supply",
-    "submittedBy": "Ministry of Public Works"
+    "submittedBy": "Ministry of Public Works",
+    "image": "/api/images/water-pump-2.jpg"
   },
   {
     "id": "SP-2024-012",
@@ -423,7 +441,8 @@
       "longitude": -9.9260
     },
     "maintenanceTeam": "Public Works Solar Unit",
-    "submittedBy": "Ministry of Public Works"
+    "submittedBy": "Ministry of Public Works",
+    "image": "/api/images/solar-pump.jpg"
   },
   {
     "id": "BH-2024-067",
@@ -449,7 +468,8 @@
       "longitude": -10.3514
     },
     "contractor": "AquaDrill Liberia Ltd.",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/water-pump.jpg"
   },
   {
     "id": "HP-2024-203",
@@ -469,7 +489,8 @@
       "longitude": -10.3513
     },
     "technician": "Water Mission Liberia",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/hand-pump.jpg"
   },
   {
     "id": "WT-2024-052",
@@ -489,7 +510,8 @@
       "longitude": -10.3515
     },
     "supplier": "Liberia Water Solutions",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/storage-tank.jpg"
   },
   {
     "id": "BH-2024-089",
@@ -515,7 +537,8 @@
       "longitude": -8.1333
     },
     "contractor": "Deep Water Drilling Co.",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/water-pump-2.jpg"
   },
   {
     "id": "HP-2024-245",
@@ -535,7 +558,8 @@
       "longitude": -8.1332
     },
     "technician": "WaterAid Liberia",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/hand-pump.jpg"
   },
   {
     "id": "SP-2024-034",
@@ -556,7 +580,8 @@
       "longitude": -8.1334
     },
     "supplier": "Solar Solutions Liberia",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/solar-pump.jpg"
   },
   {
     "id": "WT-2024-071",
@@ -576,6 +601,7 @@
       "longitude": -8.1335
     },
     "supplier": "Steel Tanks Liberia",
-    "submittedBy": "WASH Registry"
+    "submittedBy": "WASH Registry",
+    "image": "/api/images/water-tank.jpg"
   }
 ]

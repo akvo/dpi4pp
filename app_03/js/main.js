@@ -90,8 +90,7 @@ $(document).ready(function() {
 
     // Disable camera features if no cameras available
     function disableCameraFeatures() {
-        $("#start-scan").prop("disabled", true).text("No Camera Available");
-        $("#stop-scan").prop("disabled", true);
+        $("#start-scan").prop("disabled", true);
         updateScanStatus(false);
     }
 
@@ -111,6 +110,9 @@ $(document).ready(function() {
             const response = await axios.get(dataUrl);
             dpiData = response.data;
             console.log("DPI data loaded successfully:", dpiData.length, "facilities");
+
+            // Load facilities list after data is loaded
+            loadFacilitiesList();
         } catch (error) {
             console.error("Failed to load DPI data:", error);
             console.error("Error details:", error.response?.status, error.response?.statusText);
@@ -330,14 +332,11 @@ $(document).ready(function() {
     // Update scanner buttons
     function updateScannerButtons(scanning) {
         const startBtn = $("#start-scan");
-        const stopBtn = $("#stop-scan");
 
         if (scanning) {
-            startBtn.prop("disabled", true).removeClass("active");
-            stopBtn.prop("disabled", false);
+            startBtn.prop("disabled", true).addClass("scanning");
         } else {
-            startBtn.prop("disabled", false).addClass("active");
-            stopBtn.prop("disabled", true);
+            startBtn.prop("disabled", false).removeClass("scanning");
         }
     }
 
@@ -377,6 +376,12 @@ $(document).ready(function() {
 
         // Close any open modal
         $("#manual-modal").addClass("hidden");
+
+        // Update view state to show we're on detail page
+        currentView = 'detail';
+
+        // Always show scanner icon when on detail page
+        $("#center-icon").removeClass("fa-search").addClass("fa-qrcode");
 
         const detailsHtml = `
             <div class="detail-card">
@@ -501,27 +506,19 @@ $(document).ready(function() {
         const resultSection = $("#result-section");
         console.log("Result section element found:", resultSection.length);
         console.log("Result section classes before:", resultSection.attr("class"));
-        resultSection.removeClass("hidden").show();
+        resultSection.removeClass("hidden");
         console.log("Result section classes after:", resultSection.attr("class"));
 
         console.log("Hiding error section...");
         const errorSection = $("#error-section");
         console.log("Error section element found:", errorSection.length);
-        errorSection.addClass("hidden").hide();
+        errorSection.addClass("hidden");
 
-        console.log("Hiding scanner section...");
-        const scannerSection = $(".scanner-section");
-        console.log("Scanner section element found:", scannerSection.length);
-        console.log("Scanner section classes before:", scannerSection.attr("class"));
-        scannerSection.addClass("hidden").hide();
-        console.log("Scanner section classes after:", scannerSection.attr("class"));
+        console.log("Hiding scanner and list sections...");
+        $("#scanner-view").addClass("hidden");
+        $("#facilities-list").addClass("hidden");
 
         console.log("Final check - Result section visible:", !resultSection.hasClass("hidden"));
-        console.log("Final check - Scanner section hidden:", scannerSection.hasClass("hidden"));
-
-        // Force visibility check
-        console.log("Result section display style:", resultSection.css("display"));
-        console.log("Scanner section display style:", scannerSection.css("display"));
     }
 
     // Get technical details based on facility type
@@ -702,44 +699,6 @@ $(document).ready(function() {
         $(".scanner-section").addClass("hidden");
     }
 
-    // Reset to scanner view
-    function resetToScanner() {
-        console.log("=== RESET TO SCANNER ===");
-
-        console.log("Hiding result section...");
-        $("#result-section").addClass("hidden").hide();
-
-        console.log("Hiding error section...");
-        $("#error-section").addClass("hidden").hide();
-
-        console.log("Showing scanner section...");
-        $(".scanner-section").removeClass("hidden").show();
-
-        // Close any open modal
-        console.log("Closing any open modal...");
-        const modal = $("#manual-modal");
-        console.log("Modal found for reset:", modal.length);
-        modal.addClass("hidden").hide();
-
-        // Clear any input fields
-        $("#dpi-id-input").val('');
-
-        // Stop any ongoing scanning
-        stopScanning();
-
-        // Update scanner status
-        updateScanStatus(false);
-        updateScannerButtons(false);
-
-        console.log("Reset complete - scanner section visible");
-
-        // Test if event handlers are still working
-        console.log("Testing manual input button after reset...");
-        const manualBtn = $("#manual-input");
-        console.log("Manual input button found:", manualBtn.length);
-        console.log("Manual input button visible:", manualBtn.is(":visible"));
-        console.log("Manual input button disabled:", manualBtn.prop("disabled"));
-    }
 
     // Test function for manual QR code simulation
     window.testQRScan = function(testId) {
@@ -748,14 +707,135 @@ $(document).ready(function() {
         lookupDpiId(testId || "BH-2024-001");
     };
 
-    // Event Listeners
-    $("#start-scan").click(function() {
-        console.log("Start scan button clicked");
-        startScanning();
+    // View toggle state
+    let currentView = 'list'; // 'list', 'scanner', or 'detail'
+
+    // Toggle between list and scanner view
+    function toggleView() {
+        const listView = $("#facilities-list");
+        const scannerView = $("#scanner-view");
+        const resultSection = $("#result-section");
+        const errorSection = $("#error-section");
+        const centerIcon = $("#center-icon");
+
+        if (currentView === 'list') {
+            // Switch to scanner view
+            listView.addClass("hidden");
+            scannerView.removeClass("hidden");
+            resultSection.addClass("hidden");
+            errorSection.addClass("hidden");
+            centerIcon.removeClass("fa-qrcode").addClass("fa-search");
+            currentView = 'scanner';
+            // Auto-start scanning
+            setTimeout(() => startScanning(), 300);
+        } else if (currentView === 'scanner') {
+            // Switch to list view
+            scannerView.addClass("hidden");
+            resultSection.addClass("hidden");
+            errorSection.addClass("hidden");
+            listView.removeClass("hidden");
+            centerIcon.removeClass("fa-search").addClass("fa-qrcode");
+            currentView = 'list';
+            // Stop scanning if active
+            if (isScanning) {
+                stopScanning();
+            }
+        } else if (currentView === 'detail') {
+            // From detail page, go to scanner view
+            resultSection.addClass("hidden");
+            errorSection.addClass("hidden");
+            listView.addClass("hidden");
+            scannerView.removeClass("hidden");
+            centerIcon.removeClass("fa-qrcode").addClass("fa-search");
+            currentView = 'scanner';
+
+            // Re-initialize scanner if needed
+            if (!html5QrCode) {
+                initScanner();
+            }
+
+            // Auto-start scanning
+            setTimeout(() => startScanning(), 300);
+        }
+    }
+
+    // Load facilities list
+    function loadFacilitiesList() {
+        const container = $("#facilities-container");
+        container.empty();
+
+        if (!dpiData || dpiData.length === 0) {
+            container.html('<p style="text-align: center; color: #6b7280; padding: 2rem;">No facilities found</p>');
+            return;
+        }
+
+        // Get unique facilities (remove duplicates)
+        const uniqueFacilities = {};
+        dpiData.forEach(facility => {
+            if (!uniqueFacilities[facility.id]) {
+                uniqueFacilities[facility.id] = facility;
+            }
+        });
+
+        Object.values(uniqueFacilities).forEach((facility, index) => {
+            const statusClass = facility.functionality === "Functioning" ? "functioning" : "not-functioning";
+            const statusText = facility.functionality === "Functioning" ? "Functioning" : "No function";
+
+            // Construct QR code path
+            const qrCodePath = `../api/barcode/${facility.id.replace(/\//g, '_')}.png`;
+
+            // Use image from data or fallback to placeholder
+            // Update path to use relative path for GitHub Pages compatibility
+            let imageUrl = facility.image || `https://placehold.co/400x300/e5e7eb/6b7280?text=${encodeURIComponent(facility.type)}`;
+            if (facility.image && facility.image.startsWith('/api/')) {
+                imageUrl = '..' + facility.image;
+            }
+
+            const card = $(`
+                <div class="facility-card" data-id="${facility.id}">
+                    <div style="position: relative;">
+                        <img src="${imageUrl}" alt="${facility.name}" class="facility-image" />
+                        <span class="facility-status-badge ${statusClass}">${statusText}</span>
+                    </div>
+                    <div class="facility-card-body">
+                        <div class="facility-info">
+                            <h3 class="facility-name">${facility.type}</h3>
+                            <div class="facility-id"># ${facility.id}</div>
+                            <div class="facility-location">
+                                <i class="fas fa-map-marker-alt"></i> ${facility.location}
+                            </div>
+                        </div>
+                        <img src="${qrCodePath}" alt="QR Code" class="facility-qr" />
+                    </div>
+                </div>
+            `);
+
+            card.click(function() {
+                lookupDpiId(facility.id);
+            });
+
+            container.append(card);
+        });
+    }
+
+    // Search facilities (header search)
+    $("#header-search-input").on("input", function() {
+        const searchTerm = $(this).val().toLowerCase();
+        $(".facility-card").each(function() {
+            const facilityName = $(this).find(".facility-name").text().toLowerCase();
+            const facilityLocation = $(this).find(".facility-location").text().toLowerCase();
+
+            if (facilityName.includes(searchTerm) || facilityLocation.includes(searchTerm)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
     });
 
-    $("#stop-scan").click(function() {
-        stopScanning();
+    // Event Listeners
+    $("#toggle-view").click(function() {
+        toggleView();
     });
 
     $("#manual-input").click(function() {
@@ -808,12 +888,21 @@ $(document).ready(function() {
         }
     });
 
-    $("#back-btn").click(function() {
-        resetToScanner();
-    });
-
-    $("#back-to-scan").click(function() {
-        resetToScanner();
+    // Navigate to records/detail view (first nav icon)
+    $("#nav-records").click(function() {
+        // Only navigate if we're not already on detail view or if result section is hidden
+        if (currentView !== 'detail' || $("#result-section").hasClass("hidden")) {
+            // Show the facilities list as the "records" view
+            $("#facilities-list").removeClass("hidden");
+            $("#scanner-view").addClass("hidden");
+            $("#result-section").addClass("hidden");
+            $("#error-section").addClass("hidden");
+            $("#center-icon").removeClass("fa-search").addClass("fa-qrcode");
+            currentView = 'list';
+            if (isScanning) {
+                stopScanning();
+            }
+        }
     });
 
     // Close modal when clicking outside
