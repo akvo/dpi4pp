@@ -761,6 +761,14 @@ $(document).ready(function() {
 
     // Show error message
     function showErrorMessage(message) {
+        // Only show error section for lookup failures, not camera errors
+        // For camera errors, we'll show them in console and keep scanner visible
+        if (message.includes("Camera") || message.includes("camera")) {
+            console.error("Camera error:", message);
+            // Keep scanner visible for manual input option
+            return;
+        }
+
         // Stop any ongoing scanning
         stopScanning();
 
@@ -770,7 +778,9 @@ $(document).ready(function() {
         $("#error-message").text(message);
         $("#error-section").removeClass("hidden");
         $("#result-section").addClass("hidden");
-        $(".scanner-section").addClass("hidden");
+        $("#scanner-view").addClass("hidden");
+        $("#complaint-section").addClass("hidden");
+        $("#facilities-list").addClass("hidden");
     }
 
 
@@ -790,6 +800,7 @@ $(document).ready(function() {
         const scannerView = $("#scanner-view");
         const resultSection = $("#result-section");
         const errorSection = $("#error-section");
+        const complaintSection = $("#complaint-section");
         const centerIcon = $("#center-icon");
 
         if (currentView === 'list') {
@@ -798,6 +809,7 @@ $(document).ready(function() {
             scannerView.removeClass("hidden");
             resultSection.addClass("hidden");
             errorSection.addClass("hidden");
+            complaintSection.addClass("hidden");
             centerIcon.removeClass("fa-qrcode").addClass("fa-search");
             currentView = 'scanner';
             // Auto-start scanning
@@ -807,6 +819,7 @@ $(document).ready(function() {
             scannerView.addClass("hidden");
             resultSection.addClass("hidden");
             errorSection.addClass("hidden");
+            complaintSection.addClass("hidden");
             listView.removeClass("hidden");
             centerIcon.removeClass("fa-search").addClass("fa-qrcode");
             currentView = 'list';
@@ -818,6 +831,7 @@ $(document).ready(function() {
             // From detail page, go to scanner view
             resultSection.addClass("hidden");
             errorSection.addClass("hidden");
+            complaintSection.addClass("hidden");
             listView.addClass("hidden");
             scannerView.removeClass("hidden");
             centerIcon.removeClass("fa-qrcode").addClass("fa-search");
@@ -971,6 +985,7 @@ $(document).ready(function() {
             $("#scanner-view").addClass("hidden");
             $("#result-section").addClass("hidden");
             $("#error-section").addClass("hidden");
+            $("#complaint-section").addClass("hidden");
             $("#center-icon").removeClass("fa-search").addClass("fa-qrcode");
             currentView = 'list';
             if (isScanning) {
@@ -982,6 +997,7 @@ $(document).ready(function() {
     // Detail page back button
     $("#detail-back-btn").click(function() {
         $("#result-section").addClass("hidden");
+        $("#complaint-section").addClass("hidden");
         $("#facilities-list").removeClass("hidden");
         $("#center-icon").removeClass("fa-search").addClass("fa-qrcode");
         currentView = 'list';
@@ -1038,6 +1054,7 @@ $(document).ready(function() {
     $("#complaint-back-btn").click(function() {
         $("#complaint-section").addClass("hidden");
         $("#result-section").removeClass("hidden");
+        currentView = 'detail';
     });
 
     // Image upload handling
@@ -1116,6 +1133,7 @@ $(document).ready(function() {
         // Go back to detail page
         $("#complaint-section").addClass("hidden");
         $("#result-section").removeClass("hidden");
+        currentView = 'detail';
 
         // Reset form
         $("#complaint-form")[0].reset();

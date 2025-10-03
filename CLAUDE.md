@@ -148,8 +148,8 @@ Multi-app dashboard system for Liberia education and WASH data management.
 - **Access**: http://localhost:3000/app_01/, /app_02/, /app_03/
 - **Commands**:
   ```bash
-  docker-compose up -d    # Start development server
-  docker-compose down -t1 # Stop services
+  docker compose up -d    # Start development server
+  docker compose down -t1 # Stop services
   ```
 
 ### Nginx Configuration (nginx.conf)
