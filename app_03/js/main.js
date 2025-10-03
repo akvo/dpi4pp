@@ -1298,7 +1298,7 @@ $(document).ready(function() {
     // Complaint form functionality
     let currentFacilityData = null;
 
-    // Make a complain button click
+    // Make a complaint button click
     $(".complain-btn").click(function() {
         // Get current facility data from detail page
         const facilityId = $("#detail-facility-id").text().replace("# ", "");
