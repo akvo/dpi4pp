@@ -173,7 +173,7 @@ body {
 /* Scanner Title */
 .scanner-title {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #1f2937;
   text-align: center;
   margin-bottom: 0.5rem;
@@ -387,7 +387,7 @@ body {
 
 .facility-name {
   font-size: 1.125rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #1f2937;
   margin: 0;
   font-family: "Montserrat", sans-serif;
@@ -732,17 +732,21 @@ body {
 
 .detail-hero-overlay {
   position: absolute;
-  bottom: 0;
-  left: 0;
   right: 0;
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.8),
-    rgba(0, 0, 0, 0.4),
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.3),
     transparent
   );
-  padding: 3rem 2rem 2rem;
+  padding: 1rem;
   color: white;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  width: calc(100% - 2rem);
+  left: 1rem;
+  bottom: 1rem;
+  border-radius: 10px;
 }
 
 .detail-facility-name {
@@ -768,8 +772,7 @@ body {
 }
 
 .detail-content {
-  padding: 2rem;
-  padding-bottom: 2rem;
+  padding: 2rem 1rem;
   overflow-y: auto;
 }
 
@@ -857,6 +860,260 @@ body {
   font-size: 1.25rem;
 }
 
+/* Complaint Form Section */
+.complaint-section {
+  background: white;
+  min-height: 100vh;
+  padding: 0;
+}
+
+.complaint-section.hidden {
+  display: none;
+}
+
+.complaint-header {
+  padding: 1rem 0rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.complaint-back-btn {
+  background: #1f2937;
+  color: white;
+  border: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  flex-shrink: 0;
+}
+
+.complaint-back-btn:hover {
+  background: #374151;
+}
+
+.complaint-back-btn i {
+  font-size: 1.25rem;
+}
+
+.complaint-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+}
+
+.complaint-content {
+  padding: 0 0 8rem 0;
+}
+
+.complaint-facility-info {
+  margin-bottom: 1.5rem;
+}
+
+.complaint-facility-id {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+  font-family: "Montserrat", sans-serif;
+}
+
+.complaint-subtitle {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.complaint-facility-image-container {
+  width: 100%;
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.complaint-facility-image {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.complaint-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  font-family: "Montserrat", sans-serif;
+}
+
+.form-label .required {
+  color: #ef4444;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #1f2937;
+  resize: vertical;
+  min-height: 150px;
+  transition: all 0.2s ease;
+}
+
+.form-textarea::placeholder {
+  color: #9ca3af;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: #015ece;
+  box-shadow: 0 0 0 4px rgba(1, 94, 206, 0.1);
+}
+
+.upload-area {
+  position: relative;
+  border: 2px dashed #e5e7eb;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+  border-color: #015ece;
+  background: #f9fafb;
+}
+
+.file-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  background: #ebf5ff;
+  color: #015ece;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+.upload-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #015ece;
+  margin: 0;
+}
+
+.upload-info {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.image-preview {
+  position: relative;
+  margin-top: 1rem;
+}
+
+.image-preview.hidden {
+  display: none;
+}
+
+.image-preview img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.remove-image-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.remove-image-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.submit-btn {
+  width: 100%;
+  background: #015ece;
+  color: white;
+  border: none;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: "Montserrat", sans-serif;
+  box-shadow: 0 4px 12px rgba(1, 94, 206, 0.3);
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.submit-btn:hover {
+  background: #0147a8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(1, 94, 206, 0.4);
+}
+
 /* Error Section */
 .error-section {
   background: white;
@@ -918,7 +1175,7 @@ body {
 
 .error-content h3 {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #1f2937;
   margin-bottom: 0.75rem;
   font-family: "Montserrat", sans-serif;

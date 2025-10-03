@@ -994,6 +994,135 @@ $(document).ready(function() {
         }
     });
 
+    // Complaint form functionality
+    let currentFacilityData = null;
+
+    // Make a complain button click
+    $(".complain-btn").click(function() {
+        // Get current facility data from detail page
+        const facilityId = $("#detail-facility-id").text().replace("# ", "");
+        const facility = dpiData.find(f => f.id === facilityId);
+
+        if (facility) {
+            currentFacilityData = facility;
+            showComplaintForm(facility);
+        }
+    });
+
+    // Show complaint form
+    function showComplaintForm(facility) {
+        // Get image URL
+        let imageUrl = facility.image || `https://placehold.co/400x300/e5e7eb/6b7280?text=${encodeURIComponent(facility.type)}`;
+        if (facility.image && facility.image.startsWith('/api/')) {
+            imageUrl = '..' + facility.image;
+        }
+
+        // Set facility info
+        $("#complaint-facility-id").text(facility.id);
+        $("#complaint-facility-image").attr("src", imageUrl);
+
+        // Reset form
+        $("#complaint-form")[0].reset();
+        $("#image-preview").addClass("hidden");
+        $("#upload-content").show();
+
+        // Hide other sections and show complaint form
+        $("#result-section").addClass("hidden");
+        $("#facilities-list").addClass("hidden");
+        $("#scanner-view").addClass("hidden");
+        $("#error-section").addClass("hidden");
+        $("#complaint-section").removeClass("hidden");
+    }
+
+    // Complaint back button
+    $("#complaint-back-btn").click(function() {
+        $("#complaint-section").addClass("hidden");
+        $("#result-section").removeClass("hidden");
+    });
+
+    // Image upload handling
+    $("#issue-image").change(function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Check file size (max 800x400px is about 320KB for typical images)
+            if (file.size > 5 * 1024 * 1024) { // 5MB max
+                alert("File size too large. Please choose a smaller image.");
+                return;
+            }
+
+            // Check file type
+            if (!file.type.match('image.*')) {
+                alert("Please select an image file.");
+                return;
+            }
+
+            // Preview image
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $("#preview-img").attr("src", e.target.result);
+                $("#image-preview").removeClass("hidden");
+                $(".upload-content").hide();
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Remove image preview
+    $("#remove-image").click(function(e) {
+        e.preventDefault();
+        $("#issue-image").val('');
+        $("#image-preview").addClass("hidden");
+        $(".upload-content").show();
+    });
+
+    // Upload area click to trigger file input
+    $("#upload-area").click(function(e) {
+        if (!$(e.target).closest('.remove-image-btn').length &&
+            !$(e.target).closest('#image-preview').length) {
+            $("#issue-image").click();
+        }
+    });
+
+    // Form submission
+    $("#complaint-form").submit(function(e) {
+        e.preventDefault();
+
+        const description = $("#complaint-description").val().trim();
+        const imageFile = $("#issue-image")[0].files[0];
+
+        if (!description) {
+            alert("Please enter a description.");
+            return;
+        }
+
+        // Prepare complaint data
+        const complaintData = {
+            facilityId: currentFacilityData.id,
+            facilityType: currentFacilityData.type,
+            location: currentFacilityData.location,
+            description: description,
+            timestamp: new Date().toISOString(),
+            hasImage: !!imageFile
+        };
+
+        console.log("Complaint submitted:", complaintData);
+
+        // In a real app, you would send this to a server
+        // For now, just show success message
+        alert("Complaint submitted successfully!\n\nFacility: " + complaintData.facilityType +
+              "\nID: " + complaintData.facilityId +
+              "\n\nThank you for your report.");
+
+        // Go back to detail page
+        $("#complaint-section").addClass("hidden");
+        $("#result-section").removeClass("hidden");
+
+        // Reset form
+        $("#complaint-form")[0].reset();
+        $("#image-preview").addClass("hidden");
+        $(".upload-content").show();
+    });
+
     // Initialize app
     initializeApp();
 });
