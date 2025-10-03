@@ -762,9 +762,13 @@ $(document).ready(function() {
     // Show error message
     function showErrorMessage(message) {
         // Only show error section for lookup failures, not camera errors
-        // For camera errors, we'll show them in console and keep scanner visible
-        if (message.includes("Camera") || message.includes("camera")) {
+        // For camera errors, we'll show them in console and display in scanner title
+        if (message.includes("Camera") || message.includes("camera") ||
+            message.includes("permissions") || message.includes("HTTPS")) {
             console.error("Camera error:", message);
+            // Show error message in scanner view instead of hiding it
+            $(".scanner-title").text("Camera unavailable - use manual input");
+            $(".scanner-title").css("color", "#ef4444");
             // Keep scanner visible for manual input option
             return;
         }
@@ -812,6 +816,8 @@ $(document).ready(function() {
             complaintSection.addClass("hidden");
             centerIcon.removeClass("fa-qrcode").addClass("fa-search");
             currentView = 'scanner';
+            // Reset scanner title
+            $(".scanner-title").text("Scan a facility").css("color", "#1f2937");
             // Auto-start scanning
             setTimeout(() => startScanning(), 300);
         } else if (currentView === 'scanner') {
@@ -836,6 +842,9 @@ $(document).ready(function() {
             scannerView.removeClass("hidden");
             centerIcon.removeClass("fa-qrcode").addClass("fa-search");
             currentView = 'scanner';
+
+            // Reset scanner title
+            $(".scanner-title").text("Scan a facility").css("color", "#1f2937");
 
             // Re-initialize scanner if needed
             if (!html5QrCode) {
