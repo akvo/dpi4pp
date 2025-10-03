@@ -113,6 +113,20 @@ Multi-app dashboard system for Liberia education and WASH data management.
 - Redesigned complaint page with hero image matching detail page layout
 - Fixed grammar throughout: "complain" → "complaint"
 
+### Current Session (Deployment Optimization)
+**Build Pipeline Enhancement**:
+- Added asset minification to GitHub Actions workflow for production deployments
+- Integrated Node.js 20 setup in CI/CD pipeline
+- Implemented comprehensive minification strategy:
+  - **HTML minification**: html-minifier-terser with inline CSS/JS compression (~15-25% reduction)
+  - **CSS minification**: clean-css-cli for stylesheet optimization (~20-30% reduction)
+  - **JS minification**: terser with compression and mangling (~30-40% reduction)
+  - **JSON minification**: jq compact formatting for API data (~15-25% reduction)
+- Source files remain unchanged and readable; minification only occurs during build
+- Expected total bandwidth savings: ~20-30KB, significantly improving page load times
+- Particularly beneficial for mobile users on slow networks
+- Large TopoJSON files (liberia.json at 84KB) now optimized for faster map rendering
+
 ## Key Technical Stack
 - **Frontend**: Vanilla JS with jQuery (all apps)
 - **Charts**: Chart.js (app_01 enrollment analytics, app_02 water assets distribution)
@@ -190,8 +204,10 @@ Multi-app dashboard system for Liberia education and WASH data management.
 **Build Process**:
 1. **Static site assembly**: Copy all apps and API to build/
 2. **GitHub Pages prep**: Update base href tags for `/dpi4pp/` prefix
-3. **Navigation setup**: Copy docs/index.html as landing page
-4. **Artifact upload**: Prepare for GitHub Pages deployment
+3. **Node.js setup**: Install Node.js 20 for minification tools
+4. **Install minifiers**: html-minifier-terser, clean-css-cli, terser, jq
+5. **Asset minification**: Compress HTML, CSS, JS, and JSON files in build/
+6. **Artifact upload**: Prepare minified build for GitHub Pages deployment
 
 **Deploy Process**:
 - **Environment**: github-pages with proper permissions

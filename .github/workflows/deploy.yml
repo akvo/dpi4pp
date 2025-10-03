@@ -30,6 +30,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
       - name: Build static site
         run: |
           # Create a build directory for GitHub Pages
@@ -50,6 +54,36 @@ jobs:
           sed -i 's|<base href="/app_03/" />|<base href="/dpi4pp/app_03/" />|g' build/app_03/index.html
 
           echo "Updated base href tags for GitHub Pages deployment"
+
+      - name: Install minification tools
+        run: |
+          npm install -g html-minifier-terser clean-css-cli terser
+
+      - name: Minify files
+        run: |
+          echo "Minifying HTML files..."
+          find build -name "*.html" -type f -exec html-minifier-terser \
+            --collapse-whitespace \
+            --remove-comments \
+            --remove-optional-tags \
+            --remove-redundant-attributes \
+            --remove-script-type-attributes \
+            --remove-tag-whitespace \
+            --use-short-doctype \
+            --minify-css true \
+            --minify-js true \
+            -o {} {} \;
+
+          echo "Minifying CSS files..."
+          find build -name "*.css" -type f -exec cleancss -o {} {} \;
+
+          echo "Minifying JS files..."
+          find build -name "*.js" -type f -exec terser {} -o {} -c -m \;
+
+          echo "Minifying JSON files..."
+          find build -name "*.json" -type f -exec sh -c 'jq -c . "$1" > "$1.tmp" && mv "$1.tmp" "$1"' _ {} \;
+
+          echo "Minification complete!"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
