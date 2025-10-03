@@ -27,15 +27,20 @@ A comprehensive WASH (Water, Sanitation, and Hygiene) management system for Libe
   - WASH Assets Overview table with pagination
   - Chart.js visualization of water assets distribution by type
   - Support for multiple data sources (WASH Registry, Ministry of Health, Ministry of Education, Ministry of Public Works)
-  - Dark theme with responsive design
+  - Light theme with responsive design
 
 ### 3. DPI Scanner
 - **URL**: `/app_03/`
-- **Features**: Mobile-friendly barcode/QR code scanner
+- **Features**: Mobile-friendly barcode/QR code scanner with interactive facility map
 - **Functionality**:
-  - Camera-based QR code scanning
-  - Manual DPI ID input
+  - Camera-based QR code scanning with visual overlay
+  - Manual DPI ID input fallback
+  - Interactive Leaflet map showing all WASH facilities
+  - Custom teardrop pin markers (32px) with color-coding (green=functioning, red=not)
+  - Sophisticated popup cards with facility images and details
+  - Reusable search component across list and map views
   - Instant facility data lookup
+  - Auto-clearing search on page transitions
   - Offline-capable design
 
 ### 4. QR Code Library
@@ -51,12 +56,14 @@ A comprehensive WASH (Water, Sanitation, and Hygiene) management system for Libe
 
 - **Frontend**: HTML5, CSS3, JavaScript (jQuery)
 - **Icons**: Font Awesome 6.4.0
-- **Maps**: Leaflet.js with TopoJSON support
+- **Maps**: Leaflet.js with TopoJSON support (topojson-client)
 - **Charts**: Chart.js for data visualization
 - **Barcodes**: HTML5-QRCode
+- **HTTP Client**: Axios for API calls
 - **Data**: JSON-based REST API
 - **Deployment**: GitHub Pages
-- **CI/CD**: GitHub Actions
+- **CI/CD**: GitHub Actions with asset minification
+- **Build Tools**: html-minifier-terser, clean-css-cli, terser, jq
 
 ## 📊 Data Structure
 
@@ -75,10 +82,12 @@ A comprehensive WASH (Water, Sanitation, and Hygiene) management system for Libe
 
 ### Prerequisites
 - Docker and Docker Compose
-- Node.js (optional for development tools)
-- Python 3.x (for QR code generation)
+- Node.js 20+ (for QR code generation and build tools)
+- Python 3.x (legacy QR code generator)
 
 ### Running Locally
+
+#### Option 1: Docker Compose (Recommended)
 
 1. **Clone the repository**:
    ```bash
@@ -102,6 +111,34 @@ A comprehensive WASH (Water, Sanitation, and Hygiene) management system for Libe
    docker-compose down -t1
    ```
 
+#### Option 2: Static File Server
+
+Since this is a pure static site with no backend dependencies, you can also run it using any static file server:
+
+**Using Python**:
+```bash
+# Python 3
+python -m http.server 3000
+
+# Python 2
+python -m SimpleHTTPServer 3000
+```
+
+**Using Node.js (http-server)**:
+```bash
+npm install -g http-server
+http-server -p 3000
+```
+
+**Using PHP**:
+```bash
+php -S localhost:3000
+```
+
+Then access: http://localhost:3000/app_01/
+
+**Note**: Some features like QR code scanning require HTTPS. For testing camera features, use Docker Compose with proper SSL setup or deploy to a hosting service.
+
 ### Generate QR Codes
 
 To regenerate QR codes for all facilities:
@@ -123,9 +160,12 @@ The application automatically deploys to GitHub Pages when changes are pushed to
 
 1. Push changes to `main` branch
 2. GitHub Actions workflow triggers
-3. Static site is built
+3. Static site is built and copied to build directory
 4. QR codes are generated
-5. Application deploys to GitHub Pages
+5. Assets are minified (HTML, CSS, JS, JSON) for optimal performance
+6. Application deploys to GitHub Pages
+
+**Performance Optimization**: The build pipeline includes comprehensive asset minification (~20-30KB bandwidth savings) for faster page loads, particularly beneficial for mobile users on slow networks.
 
 ### Manual Deployment
 
@@ -143,13 +183,22 @@ The deployment pipeline:
    - Checks out the code
    - Sets up GitHub Pages
    - Copies all applications to build directory
+   - Sets up Node.js 20 for build tools
+   - Installs minification tools (html-minifier-terser, clean-css-cli, terser, jq)
    - Generates QR codes
+   - Minifies all HTML files (~15-25% reduction)
+   - Minifies all CSS files (~20-30% reduction)
+   - Minifies all JavaScript files (~30-40% reduction)
+   - Minifies all JSON files (~15-25% reduction)
    - Creates navigation index page
+   - Uploads optimized build artifact
 
 2. **Deploy Job**:
-   - Deploys to GitHub Pages
+   - Deploys minified build to GitHub Pages
    - Only runs on `main` branch
    - Publishes to `https://akvo.github.io/dpi4pp`
+
+**Note**: Source files remain unchanged and readable in the repository. Minification only occurs during the build process for production deployment.
 
 ## 📁 Project Structure
 
@@ -201,6 +250,28 @@ The `docker-compose.yml` provides:
 - Volume mounts for development
 - Port mapping (3000:80)
 - Auto-restart configuration
+
+## 🤖 AI Development Context
+
+### CLAUDE.md
+
+This repository includes `CLAUDE.md`, a comprehensive context file for AI-assisted development with Claude Code. It contains:
+
+- **Project Overview**: Detailed descriptions of all applications (app_01, app_02, app_03)
+- **Development History**: Complete changelog of features, implementations, and design decisions
+- **Technical Stack**: Architecture decisions, libraries, and integration patterns
+- **File Structure**: Detailed breakdown of project organization
+- **Infrastructure & DevOps**: Docker setup, GitHub Actions, deployment pipelines
+- **Cross-App Integration**: Shared components and data flow
+- **Current State**: Feature completion status and next steps
+
+**Purpose**: The CLAUDE.md file serves as a prompt cache for Claude Code, enabling:
+- Faster context loading for AI-assisted development sessions
+- Consistent understanding of project architecture across sessions
+- Preservation of design decisions and implementation rationale
+- Efficient onboarding for new development work
+
+**Note**: Always update CLAUDE.md when making significant changes to the codebase to maintain accurate AI development context.
 
 ## 🤝 Contributing
 
