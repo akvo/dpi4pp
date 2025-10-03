@@ -306,6 +306,11 @@ $(document).ready(function () {
 
         // Add legend
         addLegend();
+
+        // Fix gray tiles issue - invalidate size after map is fully loaded
+        setTimeout(function() {
+            map.invalidateSize();
+        }, 100);
     }
 
     // Get styling for GeoJSON features
