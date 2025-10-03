@@ -521,11 +521,117 @@ $(document).ready(function () {
     // Update bar chart
     let waterAssetsChart = null;
 
+    // External tooltip handler
+    function externalTooltipHandler(context) {
+        // Tooltip Element
+        const {chart, tooltip} = context;
+        const chartArea = chart.chartArea;
+
+        let tooltipEl = document.querySelector('.chart-canvas-wrapper .chartjs-tooltip');
+
+        if (!tooltipEl) {
+            tooltipEl = document.createElement('div');
+            tooltipEl.className = 'chartjs-tooltip';
+            tooltipEl.style.opacity = 0;
+            tooltipEl.style.position = 'absolute';
+            tooltipEl.style.background = '#1e293b';
+            tooltipEl.style.color = '#ffffff';
+            tooltipEl.style.borderRadius = '8px';
+            tooltipEl.style.padding = '10px 16px';
+            tooltipEl.style.pointerEvents = 'none';
+            tooltipEl.style.transition = 'all .1s ease';
+            tooltipEl.style.fontSize = '13px';
+            tooltipEl.style.fontWeight = '600';
+            tooltipEl.style.textAlign = 'center';
+            tooltipEl.style.lineHeight = '1.5';
+            tooltipEl.style.whiteSpace = 'nowrap';
+            tooltipEl.style.zIndex = '100';
+            document.querySelector('.chart-canvas-wrapper').appendChild(tooltipEl);
+        }
+
+        // Hide if no tooltip
+        if (tooltip.opacity === 0) {
+            tooltipEl.style.opacity = 0;
+            return;
+        }
+
+        // Set Text
+        if (tooltip.body) {
+            const bodyLines = tooltip.body.map(b => b.lines);
+            const dataIndex = tooltip.dataPoints[0].dataIndex;
+            const label = chart.data.labels[dataIndex];
+
+            let innerHtml = '<div style="position: relative; padding-bottom: 6px;">';
+            innerHtml += '<div style="margin-bottom: 2px;">2024</div>';
+            innerHtml += '<div>' + label + '</div>';
+            innerHtml += '<div style="width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 8px solid #1e293b; position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%);"></div>';
+            innerHtml += '</div>';
+
+            tooltipEl.innerHTML = innerHtml;
+        }
+
+        const {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
+
+        // Get the element (bar) that triggered the tooltip
+        const activeElements = chart.getActiveElements();
+        if (activeElements.length > 0) {
+            const element = activeElements[0].element;
+            const barCenterX = element.x;
+            const barTopY = element.y;
+
+            // Position tooltip centered above the bar
+            tooltipEl.style.opacity = 1;
+            tooltipEl.style.left = positionX + barCenterX + 'px';
+            tooltipEl.style.top = positionY + barTopY + 'px';
+            tooltipEl.style.transform = 'translate(-50%, -100%) translateY(-8px)';
+        }
+    }
+
     function updateBarChart() {
-        // Load chart data from JSON file
-        fetch('data/water-assets.json')
+        // Load DPI data and calculate distribution
+        fetch('../api/dpi.json')
             .then(response => response.json())
-            .then(chartData => {
+            .then(dpiData => {
+                // Count assets by type
+                const typeCounts = {};
+                let total = 0;
+
+                dpiData.forEach(asset => {
+                    const type = asset.type;
+                    typeCounts[type] = (typeCounts[type] || 0) + 1;
+                    total++;
+                });
+
+                // Prepare chart data - map to reference image categories
+                const typeMapping = {
+                    'Hand Pump': 'Public Taps',
+                    'Borehole': 'Protected Spring',
+                    'Solar Pump': 'Private Taps',
+                    'Storage Tank': 'Groundwater',
+                    'Rainwater System': 'Private Taps',
+                    'Dug Well': 'Groundwater'
+                };
+
+                const categoryData = {};
+                Object.keys(typeCounts).forEach(type => {
+                    const category = typeMapping[type] || type;
+                    categoryData[category] = (categoryData[category] || 0) + typeCounts[type];
+                });
+
+                // Calculate percentages and prepare data
+                const labels = Object.keys(categoryData);
+                const values = Object.values(categoryData);
+                const percentages = values.map(v => ((v / total) * 100).toFixed(1));
+
+                // Color mapping
+                const colorMap = {
+                    'Public Taps': '#a8d5e2',
+                    'Protected Spring': '#ffb88c',
+                    'Private Taps': '#86e5d2',
+                    'Groundwater': '#2d6470'
+                };
+                const colors = labels.map(label => colorMap[label] || '#cccccc');
+
                 const ctx = document.getElementById('water-assets-chart').getContext('2d');
 
                 // Destroy existing chart if it exists
@@ -533,21 +639,94 @@ $(document).ready(function () {
                     waterAssetsChart.destroy();
                 }
 
+                // Chart options
+                const chartOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Distribution of Water Assets per Type',
+                            color: '#ffffff',
+                            font: {
+                                size: 18,
+                                weight: '600'
+                            },
+                            align: 'start',
+                            padding: {
+                                bottom: 20
+                            }
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: false,
+                            external: externalTooltipHandler
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: false
+                            },
+                            ticks: {
+                                display: false
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#64748b',
+                                stepSize: 2,
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            grid: {
+                                color: '#e2e8f0',
+                                drawBorder: false
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                };
+
                 // Create new chart
                 waterAssetsChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: chartData.data.labels,
+                        labels: labels,
                         datasets: [{
                             label: 'Number of Assets',
-                            data: chartData.data.values,
-                            backgroundColor: chartData.colors,
-                            borderColor: chartData.colors,
-                            borderWidth: 1
+                            data: values,
+                            backgroundColor: colors,
+                            borderColor: colors,
+                            borderWidth: 0,
+                            borderRadius: 8,
+                            barThickness: 60
                         }]
                     },
-                    options: chartData.options
+                    options: chartOptions
                 });
+
+                // Create custom legend with real data
+                const chartData = {
+                    data: {
+                        labels: labels,
+                        values: values,
+                        percentages: percentages
+                    },
+                    colors: colors
+                };
+                console.log('Creating legend with data:', chartData);
+                console.log('Legend container exists:', document.getElementById('chart-legend'));
+                createCustomLegend(chartData);
             })
             .catch(error => {
                 console.error('Error loading chart data:', error);
@@ -613,6 +792,40 @@ $(document).ready(function () {
                     }
                 });
             });
+    }
+
+    // Create custom legend
+    function createCustomLegend(chartData) {
+        const legendContainer = document.getElementById('chart-legend');
+
+        if (!legendContainer) {
+            return;
+        }
+
+        legendContainer.innerHTML = '';
+
+        chartData.data.labels.forEach((label, index) => {
+            const legendItem = document.createElement('div');
+            legendItem.className = 'legend-item';
+
+            const colorBox = document.createElement('div');
+            colorBox.className = 'legend-color';
+            colorBox.style.backgroundColor = chartData.colors[index];
+
+            const labelText = document.createElement('span');
+            labelText.className = 'legend-label';
+            labelText.textContent = label;
+
+            const percentage = document.createElement('span');
+            percentage.className = 'legend-percentage';
+            percentage.textContent = chartData.data.percentages[index] + '%';
+
+            legendItem.appendChild(colorBox);
+            legendItem.appendChild(labelText);
+            legendItem.appendChild(percentage);
+
+            legendContainer.appendChild(legendItem);
+        });
     }
 
     

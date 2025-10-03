@@ -1,10 +1,11 @@
 {
   "title": "Distribution of Water Assets per Type",
   "data": {
-    "labels": ["Public Taps", "Private Taps", "Protected Spring", "Groundwater Source"],
-    "values": [8, 12, 16, 20]
+    "labels": ["Public Taps", "Protected Spring", "Private Taps", "Groundwater"],
+    "values": [4.3, 7.5, 2, 6],
+    "percentages": [52.1, 22.8, 13.9, 11.2]
   },
-  "colors": ["#00a8ff", "#00d4aa", "#ffa502", "#ff4757"],
+  "colors": ["#a8d5e2", "#ffb88c", "#86e5d2", "#2d6470"],
   "chartType": "bar",
   "options": {
     "responsive": true,
@@ -15,12 +16,34 @@
         "text": "Distribution of Water Assets per Type",
         "color": "#ffffff",
         "font": {
-          "size": 16,
-          "weight": "bold"
+          "size": 18,
+          "weight": "600"
+        },
+        "align": "start",
+        "padding": {
+          "bottom": 20
         }
       },
       "legend": {
         "display": false
+      },
+      "tooltip": {
+        "enabled": true,
+        "backgroundColor": "#1e293b",
+        "titleColor": "#ffffff",
+        "bodyColor": "#ffffff",
+        "padding": 12,
+        "cornerRadius": 8,
+        "displayColors": false,
+        "position": "average",
+        "yAlign": "bottom",
+        "xAlign": "center",
+        "caretPadding": 10
+      }
+    },
+    "layout": {
+      "padding": {
+        "right": 0
       }
     },
     "scales": {
@@ -40,15 +63,21 @@
           "display": false
         },
         "ticks": {
-          "color": "#94a3b8",
-          "stepSize": 5,
-          "max": 20
+          "color": "#64748b",
+          "stepSize": 2,
+          "max": 8,
+          "font": {
+            "size": 12
+          }
         },
         "grid": {
-          "color": "#e2e8f0"
+          "color": "#e2e8f0",
+          "drawBorder": false
         },
         "beginAtZero": true
       }
-    }
+    },
+    "barThickness": 60,
+    "borderRadius": 8
   }
 }

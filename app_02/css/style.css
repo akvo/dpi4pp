@@ -466,13 +466,65 @@ body {
 /* Chart Container */
 .chart-container {
   padding: 24px;
-  height: 300px;
+  min-height: 300px;
   position: relative;
 }
 
+.chart-with-legend {
+  display: grid;
+  grid-template-columns: 1fr 180px;
+  gap: 20px;
+  align-items: center;
+  width: 100%;
+}
+
+.chart-canvas-wrapper {
+  position: relative;
+  height: 250px;
+  width: 100%;
+}
+
 #water-assets-chart {
-  width: 100% !important;
   height: 100% !important;
+  width: 100% !important;
+}
+
+/* Custom Chart Legend */
+.chart-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-left: 20px;
+  border-left: 1px solid var(--border-color);
+  width: 100%;
+  align-self: stretch;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-label {
+  font-size: 13px;
+  color: var(--text-primary);
+  flex: 1;
+  line-height: 1.2;
+}
+
+.legend-percentage {
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-left: auto;
 }
 
 /* KPI Shimmer Animation */
