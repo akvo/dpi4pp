@@ -54,3 +54,6 @@ logs/
 
 # Screenshots
 screenshots/
+
+# Executive/Business analysis documents
+docs/EXEC_*.md
